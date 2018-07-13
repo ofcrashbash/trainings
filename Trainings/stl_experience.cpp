@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
+#include "stl_experience.h"
 
 //docs http://www.cplusplus.com/reference/vector/vector/
 int vetor_test() {
@@ -75,13 +74,49 @@ int vetor_test() {
 	//#########
 	//MODIFIERS
 	//#########
+	
+	//assign
+	std::vector<int> test_vec = {0, 1, 2, 3};
+	vec.assign(test_vec.begin(), test_vec.end());
+	for (cvec_iter = vec.cbegin(); cvec_iter != vec.cend(); ++cvec_iter)
+		std::cout << *cvec_iter << std::endl;
+	
 
+	vec.assign(5, 1);
+	for (cvec_iter = vec.cbegin(); cvec_iter != vec.cend(); ++cvec_iter)
+		std::cout << *cvec_iter << std::endl;
+
+	//push_back
+	vec.push_back(10000);
+	
+	//pop_back - deletes last element
+	vec.pop_back();
+	
+	//insert 
+	//single element
+	std::cout << "insertion: " << std::endl;
+	cvec_iter = vec.cbegin();
+	cvec_iter += 1;
+	vec.insert(cvec_iter, 999999);
+
+	//fill
+	vec.insert(vec.cbegin() + 2, 10, 8888);
+	for (cvec_iter = vec.cbegin(); cvec_iter != vec.cend(); ++cvec_iter)
+		std::cout << *cvec_iter << std::endl;
 
 
 
 
 	if (!vec.empty())
 		vec.clear();
+
+	return 0;
+}
+
+
+int map_test()
+{
+	std::map<std::string, char> map;
 
 	return 0;
 }
