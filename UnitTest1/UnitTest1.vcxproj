@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;C:\Users\ofcra\source\repos\Trainings\Trainings\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>stl_experience.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>stl_experience.obj;theEulerProject.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

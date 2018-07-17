@@ -117,9 +117,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stl_experience.cpp" />
+    <ClCompile Include="TheEulerProject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stl_experience.h" />
+    <ClInclude Include="theEulerProject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

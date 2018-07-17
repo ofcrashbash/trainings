@@ -21,9 +21,15 @@
     <ClCompile Include="stl_experience.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TheEulerProject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stl_experience.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="theEulerProject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
