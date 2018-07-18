@@ -17,7 +17,7 @@ namespace UnitTest1
 			Assert::AreEqual(vetor_test(), 0, L"mesage");
 		}
 
-		TEST_METHOD(TestMethod2)
+		TEST_METHOD(multipliers_brute_test)
 		{
 			Assert::AreEqual(multipliers_of_5_and_3(10), 23, L"sum of mulitpliers below 10 isn't equal to 23");
 			Assert::AreEqual(multipliers_of_5_and_3(2), 0, L"sum of mulitpliers below 2 isn't equal to 0");
@@ -26,13 +26,22 @@ namespace UnitTest1
 			Assert::AreEqual(multipliers_of_5_and_3(-1), 0, L"sum of mulitpliers below -1 isn't equal to 0");
 		}
 
-		TEST_METHOD(TestMethod3)
+		TEST_METHOD(multipliers_fast_test)
 		{
 			Assert::AreEqual(multipliers_of_5_and_3_fast(10), 23, L"sum of mulitpliers below 10 isn't equal to 23");
 			Assert::AreEqual(multipliers_of_5_and_3_fast(2), 0, L"sum of mulitpliers below 2 isn't equal to 0");
 			Assert::AreEqual(multipliers_of_5_and_3_fast(1), 0, L"sum of mulitpliers below 1 isn't equal to 0");
 			Assert::AreEqual(multipliers_of_5_and_3_fast(0), 0, L"sum of mulitpliers below 0 isn't equal to 0");
 			Assert::AreEqual(multipliers_of_5_and_3_fast(-1), 0, L"sum of mulitpliers below -1 isn't equal to 0");
+		}
+
+		TEST_METHOD(fibonachi_even_numbers_sum)
+		{
+			Assert::AreEqual(sum_of_fibonachi_even_numbers(10), 15, L"sum of fibonachi even num below 10 isn't equal to 15");
+			Assert::AreEqual(sum_of_fibonachi_even_numbers(2), 0, L"sum of fibonachi even num below 2 isn't equal to 0");
+			Assert::AreEqual(sum_of_fibonachi_even_numbers(1), 0, L"sum of fibonachi even num below 1 isn't equal to 0");
+			Assert::AreEqual(sum_of_fibonachi_even_numbers(0), 0, L"sum of fibonachi even num below 0 isn't equal to 0");
+			Assert::AreEqual(sum_of_fibonachi_even_numbers(-1), 0, L"sum of fibonachi even num below -1 isn't equal to 0");
 		}
 
 	};

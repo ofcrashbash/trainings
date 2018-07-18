@@ -56,3 +56,11 @@ int multipliers_of_5_and_3_fast(int max)
 	
 	return sum;
 }
+
+
+int sum_of_fibonachi_even_numbers(int max) 
+{
+	int sum = 0;
+
+	return sum;
+}
