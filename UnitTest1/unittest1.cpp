@@ -78,5 +78,37 @@ namespace UnitTest1
 			Assert::AreEqual(largest_prime_factor((unsignllongint)13195), (unsignllongint)29, L"largest prime factor isn't 21");
 		}
 
+
+		TEST_METHOD(task_4_is_polindrome)
+		{
+			Assert::IsTrue(is_palindrome(1234321), L"1234321 - should be palindrome");
+			Assert::IsTrue(is_palindrome(123321), L"123321 - should be palindrome");
+			Assert::IsTrue(is_palindrome(12321), L"12321 - should be palindrome");
+			Assert::IsTrue(is_palindrome(1221), L"1221 - should be palindrome");
+			Assert::IsTrue(is_palindrome(11), L"11 - should be palindrome");
+			Assert::IsTrue(is_palindrome(1), L"1 - should be palindrome");
+			Assert::IsTrue(is_palindrome(0), L"0 - should be palindrome");
+			Assert::IsFalse(is_palindrome(12345), L"12345 - isn't palindrome");
+			Assert::IsFalse(is_palindrome(123423424), L"123423424 - isn't palindrome");
+		}
+		TEST_METHOD(task_4_is_polindrome_fast)
+		{
+			Assert::IsTrue(is_palindrome_fast(1234321), L"1234321 - should be palindrome");
+			Assert::IsTrue(is_palindrome_fast(123321), L"123321 - should be palindrome");
+			Assert::IsTrue(is_palindrome_fast(12321), L"12321 - should be palindrome");
+			Assert::IsTrue(is_palindrome_fast(1221), L"1221 - should be palindrome");
+			Assert::IsTrue(is_palindrome_fast(11), L"11 - should be palindrome");
+			Assert::IsTrue(is_palindrome_fast(1), L"1 - should be palindrome");
+			Assert::IsTrue(is_palindrome_fast(0), L"0 - should be palindrome");
+			Assert::IsFalse(is_palindrome_fast(12345), L"12345 - isn't palindrome");
+			Assert::IsFalse(is_palindrome_fast(123423424), L"123423424 - isn't palindrome");
+		}
+
+		TEST_METHOD(task_4_palindrome_test)
+		{
+			Assert::AreEqual(find_maximal_polindrome(2), 9009, L"Palindrome for 2 digit num should be 9009 = 91*99");
+			Assert::AreEqual(find_maximal_polindrome(1), 9, L"Palindrome for 1 digit num should be 3*3 = 9");
+		}
+
 	};
 }

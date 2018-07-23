@@ -18,3 +18,8 @@ unsignllongint largest_prime_factor(unsignllongint number);
 
 //from web
 unsignllongint largest_prime_web(unsignllongint);
+
+//forth
+bool is_palindrome(int val);
+bool is_palindrome_fast(int val);
+int find_maximal_polindrome(int);

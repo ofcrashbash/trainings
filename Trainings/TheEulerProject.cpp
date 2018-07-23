@@ -147,9 +147,24 @@ unsignllongint largest_prime_factor(unsignllongint number)
 
 unsignllongint largest_prime_web(unsignllongint number)
 {
-	int factor = 2;
+	
 	int lastFactor = 1;
-	while (number > 1)
+
+	int factor = 2;
+	if (number % factor == 0)//2
+	{
+		lastFactor = factor;
+		number /= factor;
+		int count = 1;
+		while (number % factor == 0) {
+			count++;
+			number /= factor;
+		}
+		std::cout << "{ " << factor << ", " << count << " }" << std::endl;
+	}
+	unsignllongint maxFactor = std::sqrt(number);
+	factor = 3;
+	while (number > 1 && factor < maxFactor)
 	{
 		if (number % factor == 0)
 		{
@@ -160,9 +175,66 @@ unsignllongint largest_prime_web(unsignllongint number)
 				count++;
 				number /= factor;
 			}
+			maxFactor = std::sqrt(number);
 			std::cout << "{ " << factor << ", " << count << " }" << std::endl;
 		}
-		++factor;
+		factor += 2;
 	}
-	return lastFactor;
+	if (number == 1)
+		return maxFactor;
+	else
+		return number;
+}
+
+//Task 4
+//Brute Force
+
+bool is_palindrome(int val)
+{
+	std::vector<int> digits;
+	digits.reserve(6);
+	auto temp_val = val;
+	int modulo = 0;
+
+	while (val > 0)
+	{
+		modulo = val % 10;
+		if(val > 0)
+			digits.push_back(modulo);
+		val /= 10;
+	}
+
+	std::vector<int> rev_digits(digits);
+	std::reverse(rev_digits.begin(), rev_digits.end());
+
+	if (rev_digits == digits)
+		return true;
+	else
+		return false;
+}
+
+bool is_palindrome_fast(int val)
+{
+	int reversed = 0;
+	auto temp_val = val;
+	while (val > 0)
+	{
+		reversed = 10 * reversed + val % 10;
+		val /= 10;
+	}
+	return reversed == temp_val;
+}
+
+int find_maximal_polindrome(int digit_num)
+{
+	int max_palindrome = 0;
+	for (int i = (int)std::pow(10, digit_num) - 1; i > (int)std::pow(10, digit_num - 1); --i)
+		for (int j = i; j > (int)std::pow(10, digit_num - 1); --j)
+			if (is_palindrome_fast(i * j) && i*j > max_palindrome)
+			{
+				std::cout << i <<" * "<< j <<" = " << i * j << std::endl;
+				max_palindrome = i * j;
+			}
+
+	return max_palindrome;
 }
