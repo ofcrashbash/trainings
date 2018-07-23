@@ -24,3 +24,6 @@ bool is_palindrome(unsignllongint val);
 bool is_palindrome_fast(unsignllongint val);
 unsignllongint find_maximal_polindrome(unsignllongint);
 unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num);
+
+//fifth
+int smallest_multiple(int max_div);

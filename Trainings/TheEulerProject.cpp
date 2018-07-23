@@ -98,8 +98,6 @@ int sum_of_fibonachi_even_numbers_fast(int max)
 	return sum;
 }
 
-
-
 //Task 3 
 //Brute Force
 bool is_largest_prime(std::vector<unsignllongint> & prime_vector, unsignllongint number)
@@ -272,4 +270,14 @@ unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num)
 	}
 	std::cout << maxi << " * " << maxj << " = " << max_palindrome << std::endl;
 	return max_palindrome;
+}
+
+
+//TASK 5
+//BRUTE FORCE
+
+int smallest_multiple(int max_div)
+{
+
+	return 0;
 }

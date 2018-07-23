@@ -47,12 +47,15 @@ int main(int argc, char ** argv)
 	std::cout << "solution fron web. Factor of : " << ULLONG_MAX<< "  " << largest_prime_web(ULLONG_MAX) << std::endl;
 	std::cout << "solution fron web. Factor of : " << 135771890205034978 << "  " << largest_prime_web(135771890205034978) << std::endl;
 */
-	std::cout << "Task #4 Palnidromes" << std::endl;
-	/*std::cout << "max palindrome for 2 digit nums : " << find_maximal_polindrome(2) << std::endl;
+/*	std::cout << "Task #4 Palnidromes" << std::endl;
+	std::cout << "max palindrome for 2 digit nums : " << find_maximal_polindrome(2) << std::endl;
 	std::cout << "max palindrome for 3 digit nums : " << find_maximal_polindrome(3) << std::endl;
-	std::cout << "max palindrome for 4 digit nums : " << find_maximal_polindrome(4) << std::endl;*/
+	std::cout << "max palindrome for 4 digit nums : " << find_maximal_polindrome(4) << std::endl;
 	std::cout << "max palindrome for 2 digit nums : " << find_maximal_palindrome_fast(2) << std::endl;
-	std::cout << "max palindrome for 7 digit nums : " << find_maximal_palindrome_fast(7) << std::endl;
+	std::cout << "max palindrome for 7 digit nums : " << find_maximal_palindrome_fast(7) << std::endl;*/
+
+	std::cout << "Task #5 Smallest multiple" << std::endl;
+	std::cout << "Smallest number that can be divided by 1,..,10: " << smallest_multiple(10) << std::endl;
 
 	return 0;
 }
