@@ -1,13 +1,21 @@
 #include <iostream>
 #include "stl_experience.h"
 #include "theEulerProject.h"
+#include <limits>
 
 int main(int argc, char ** argv)
 {
 	std::cout << "####################" << std::endl;
 	std::cout << "STL Lilbrary Testing" << std::endl;
 	std::cout << "####################" << std::endl;
+	std::cout << "##vector test##" << std::endl;
 	vetor_test();
+	std::cout << "##map test##" << std::endl;
+	map_test();
+	std::cout << "##list test##" << std::endl;
+	list_test();
+	std::cout << "##array test##" << std::endl;
+	array_test();
 
 
 	std::cout << "##################" << std::endl;
@@ -33,5 +41,9 @@ int main(int argc, char ** argv)
 	std::cout << "#####FAST######" << std::endl;
 	std::cout << "Fibonachi sum below 10 : " << sum_of_fibonachi_even_numbers_fast(10) << std::endl;
 	std::cout << "Fibonachi sum below 4mln : " << sum_of_fibonachi_even_numbers_fast(4000000) << std::endl;
+	
+	
+	std::cout << "Task #3" << std::endl;
+	std::cout << "solution fron web. Factor of : " << ULLONG_MAX<< "  " << largest_prime_web(ULLONG_MAX) << std::endl;
 	return 0;
 }

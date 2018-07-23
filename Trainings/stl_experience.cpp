@@ -118,5 +118,51 @@ int map_test()
 {
 	std::map<std::string, char> map;
 
+	map["Key"] = 'B';
+	map["Milena"] = 'A';
+	map["Vasa"] = 'A';
+
+	
+
+	std::cout << "map size : " << map.size() << std::endl;
+	std::cout << "is map empty : " << map.empty() << std::endl;
+
+	//iterator
+	std::map<std::string, char>::iterator map_iter;
+	
+	for (map_iter = map.begin(); map_iter != map.end(); ++map_iter)
+		std::cout << map_iter->first << " " << map_iter->second << std::endl;
+
+	map.erase("Vasa");
+	map.clear();
+
+
+	return 0;
+}
+
+int list_test()
+{
+	std::list<int> list;
+	list.push_front(0);
+	list.push_back(1);
+	std::list<int>::iterator list_iter;
+	for (list_iter = list.begin(); list_iter != list.end(); ++list_iter)
+		std::cout << *list_iter << std::endl;
+
+	return 0;
+}
+
+int array_test()
+{
+	//fixed compile time size
+	std::array<int, 100> arr;
+	arr.fill(10);
+	for (auto el : arr)
+		std::cout << el << std::endl;
+
+	std::cout << arr.at(10) << std::endl;
+	//std::cout << arr.at(1000) << std::endl;
+	std::cout << arr.max_size() << std::endl;
+
 	return 0;
 }

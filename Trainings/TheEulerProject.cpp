@@ -40,8 +40,6 @@ int multipliers_of_5_and_3(int max)
 
 	return sum;
 }
-
-
 int multipliers_of_5_and_3_fast(int max)
 {
 	int count_3 = (max - 1) / 3;
@@ -53,8 +51,6 @@ int multipliers_of_5_and_3_fast(int max)
 	
 	return sum;
 }
-
-
 //brute force
 //O(N)
 int sum_of_fibonachi_even_numbers(int max) 
@@ -87,7 +83,6 @@ int fibonachi(int n)
 	int value = std::floor( (std::pow(golden_ratio_1, n) - std::pow(golden_ratio_2, n)) / std::sqrt(5.));
 	return value;
 }
-
 int sum_of_fibonachi_even_numbers_fast(int max)
 {
 	int val = 0;
@@ -101,4 +96,73 @@ int sum_of_fibonachi_even_numbers_fast(int max)
 	} while (val < max);
 
 	return sum;
+}
+
+
+
+//Task 3 
+//Brute Force
+bool is_largest_prime(std::vector<unsignllongint> & prime_vector, unsignllongint number)
+{
+	for (auto prime : prime_vector)
+		if (number % prime == 0)
+			return false;
+	return true;
+}
+
+
+unsignllongint largest_prime_factor(unsignllongint number)
+{
+	unsignllongint last_prime = 2;
+	std::vector<unsignllongint> primes_vector = { last_prime };
+	unsignllongint last_number = 2;
+
+	if (number < 1)
+		throw("number is less then 1");
+
+	//init
+	if (number % last_prime == 0)
+		last_number = last_prime;
+
+	while (last_number <= number)
+	{
+		//looking for next prime number
+		while (!is_largest_prime(primes_vector, ++last_number) && last_number <= number);
+
+		//collecting all prime numbers
+		
+		primes_vector.push_back(last_number);
+
+		if (number % last_number == 0)
+			std::cout << last_number << std::endl;
+			last_prime = last_number;
+	}
+
+	for (auto prime : primes_vector)
+		std::cout << prime << " ";
+	std::cout << std::endl;
+
+	return last_prime;
+}
+
+unsignllongint largest_prime_web(unsignllongint number)
+{
+	int factor = 2;
+	int lastFactor = 1;
+	while (number > 1)
+	{
+		if (number % factor == 0)
+		{
+			lastFactor = factor;
+			number /= factor;
+			int count = 1;
+			while (number % factor == 0) {
+				count++;
+				number /= factor;
+			}
+			std::cout << "{ " << factor << ", " << count << " }" << std::endl;
+		}
+		++factor;
+	}
+	return lastFactor;
 }

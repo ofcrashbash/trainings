@@ -6,7 +6,8 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest1
-{		
+{	
+
 	TEST_CLASS(UnitTest1)
 	{
 	public:
@@ -54,6 +55,27 @@ namespace UnitTest1
 			Assert::AreEqual(sum_of_fibonachi_even_numbers_fast(1), 0, L"sum of fibonachi even num below 1 isn't equal to 0");
 			Assert::AreEqual(sum_of_fibonachi_even_numbers_fast(0), 0, L"sum of fibonachi even num below 0 isn't equal to 0");
 			Assert::AreEqual(sum_of_fibonachi_even_numbers_fast(-1), 0, L"sum of fibonachi even num below -1 isn't equal to 0");
+		}
+
+		TEST_METHOD(is_prime_test)
+		{
+			std::vector<unsignllongint> prime_vector{ 2,3,5,7,11,13,17,19,23,29};
+			Assert::IsTrue(is_largest_prime(prime_vector, (unsignllongint)31), L"2 is a first prime number!");
+		}
+
+		TEST_METHOD(largest_prime_factor_test)
+		{
+			//TODO no exception thrown
+			auto  funPtr = [this] {largest_prime_factor((unsignllongint)0);};
+			Assert::ExpectException<std::string>(funPtr, L"No exception thrown");
+
+			unsignllongint number = 4;
+			unsignllongint result = 2;
+			
+			//this all works wrong
+			Assert::AreEqual(largest_prime_factor(number), result, L"largest prime factor isn't 2");
+			Assert::AreEqual(largest_prime_factor((unsignllongint)22), (unsignllongint)11, L"largest prime factor isn't 21");
+			Assert::AreEqual(largest_prime_factor((unsignllongint)13195), (unsignllongint)29, L"largest prime factor isn't 21");
 		}
 
 	};
