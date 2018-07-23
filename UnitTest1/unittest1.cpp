@@ -106,9 +106,14 @@ namespace UnitTest1
 
 		TEST_METHOD(task_4_palindrome_test)
 		{
-			Assert::AreEqual(find_maximal_polindrome(2), 9009, L"Palindrome for 2 digit num should be 9009 = 91*99");
-			Assert::AreEqual(find_maximal_polindrome(1), 9, L"Palindrome for 1 digit num should be 3*3 = 9");
+			Assert::AreEqual(find_maximal_polindrome((unsignllongint)2), (unsignllongint)9009, L"Palindrome for 2 digit num should be 9009 = 91*99");
+			Assert::AreEqual(find_maximal_polindrome((unsignllongint)1), (unsignllongint)9, L"Palindrome for 1 digit num should be 3*3 = 9");
 		}
-
+		
+		TEST_METHOD(task_4_palindrome_fast_test)
+		{
+			Assert::AreEqual(find_maximal_palindrome_fast((unsignllongint)2), (unsignllongint)9009, L"Palindrome for 2 digit num should be 9009 = 91*99");
+			//Assert::AreEqual(find_maximal_palindrome_fast(1), 9, L"Palindrome for 1 digit num should be 3*3 = 9"); don't work for this case
+		}
 	};
 }

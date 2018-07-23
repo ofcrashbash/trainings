@@ -20,6 +20,7 @@ unsignllongint largest_prime_factor(unsignllongint number);
 unsignllongint largest_prime_web(unsignllongint);
 
 //forth
-bool is_palindrome(int val);
-bool is_palindrome_fast(int val);
-int find_maximal_polindrome(int);
+bool is_palindrome(unsignllongint val);
+bool is_palindrome_fast(unsignllongint val);
+unsignllongint find_maximal_polindrome(unsignllongint);
+unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num);

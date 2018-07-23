@@ -80,7 +80,7 @@ int fibonachi(int n)
 {
 	double golden_ratio_1 = (1. + std::sqrt(5.)) / 2.;
 	double golden_ratio_2 = (1. - std::sqrt(5.)) / 2.;
-	int value = std::floor( (std::pow(golden_ratio_1, n) - std::pow(golden_ratio_2, n)) / std::sqrt(5.));
+	int value = (int)std::floor( (std::pow(golden_ratio_1, n) - std::pow(golden_ratio_2, n)) / std::sqrt(5.));
 	return value;
 }
 int sum_of_fibonachi_even_numbers_fast(int max)
@@ -162,7 +162,7 @@ unsignllongint largest_prime_web(unsignllongint number)
 		}
 		std::cout << "{ " << factor << ", " << count << " }" << std::endl;
 	}
-	unsignllongint maxFactor = std::sqrt(number);
+	unsignllongint maxFactor = (unsignllongint)std::sqrt(number);
 	factor = 3;
 	while (number > 1 && factor < maxFactor)
 	{
@@ -175,7 +175,7 @@ unsignllongint largest_prime_web(unsignllongint number)
 				count++;
 				number /= factor;
 			}
-			maxFactor = std::sqrt(number);
+			maxFactor = (unsignllongint)std::sqrt(number);
 			std::cout << "{ " << factor << ", " << count << " }" << std::endl;
 		}
 		factor += 2;
@@ -189,12 +189,12 @@ unsignllongint largest_prime_web(unsignllongint number)
 //Task 4
 //Brute Force
 
-bool is_palindrome(int val)
+bool is_palindrome(unsignllongint val)
 {
-	std::vector<int> digits;
+	std::vector<unsignllongint> digits;
 	digits.reserve(6);
 	auto temp_val = val;
-	int modulo = 0;
+	unsignllongint modulo = 0;
 
 	while (val > 0)
 	{
@@ -204,7 +204,7 @@ bool is_palindrome(int val)
 		val /= 10;
 	}
 
-	std::vector<int> rev_digits(digits);
+	std::vector<unsignllongint> rev_digits(digits);
 	std::reverse(rev_digits.begin(), rev_digits.end());
 
 	if (rev_digits == digits)
@@ -213,9 +213,9 @@ bool is_palindrome(int val)
 		return false;
 }
 
-bool is_palindrome_fast(int val)
+bool is_palindrome_fast(unsignllongint val)
 {
-	int reversed = 0;
+	unsignllongint reversed = 0;
 	auto temp_val = val;
 	while (val > 0)
 	{
@@ -225,16 +225,51 @@ bool is_palindrome_fast(int val)
 	return reversed == temp_val;
 }
 
-int find_maximal_polindrome(int digit_num)
+unsignllongint find_maximal_polindrome(unsignllongint digit_num)
 {
-	int max_palindrome = 0;
-	for (int i = (int)std::pow(10, digit_num) - 1; i > (int)std::pow(10, digit_num - 1); --i)
-		for (int j = i; j > (int)std::pow(10, digit_num - 1); --j)
+	unsignllongint max_palindrome = 0;
+	for (unsignllongint i = (unsignllongint)std::pow(10, digit_num) - 1; i > (unsignllongint)std::pow(10, digit_num - 1); --i)
+		for (unsignllongint j = i; j > (unsignllongint)std::pow(10, digit_num - 1); --j)
 			if (is_palindrome_fast(i * j) && i*j > max_palindrome)
 			{
 				std::cout << i <<" * "<< j <<" = " << i * j << std::endl;
 				max_palindrome = i * j;
 			}
+	return max_palindrome;
+}
 
+unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num)
+{
+	unsignllongint i = (unsignllongint)(std::pow(10, digit_num) - 1);
+	unsignllongint j, dj, max_palindrome{0};
+	unsignllongint maxi, maxj;
+	while (i > std::pow(10, digit_num - 1))
+	{
+		if (i % 11 == 0)
+		{
+			j = (unsignllongint)(std::pow(10, digit_num) - 1);
+			dj = 1;
+		}
+		else
+		{
+			j = (unsignllongint)(std::floor(std::pow(10, digit_num) / 11) * 11);
+			dj = 11;
+		}
+
+		while (j >= i) 
+		{
+			if (i * j <= max_palindrome)
+				break;
+			if (is_palindrome_fast(i * j))
+			{
+				max_palindrome = i * j;
+				maxi = i;
+				maxj = j;
+			}
+			j -= dj;
+		}
+		i -= 1;
+	}
+	std::cout << maxi << " * " << maxj << " = " << max_palindrome << std::endl;
 	return max_palindrome;
 }
