@@ -276,8 +276,27 @@ unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num)
 //TASK 5
 //BRUTE FORCE
 
-int smallest_multiple(int max_div)
+bool is_multile_of_brute(int max_div, unsignllongint value)
 {
+	for (int i = 1; i < max_div; ++i)
+		if (value % i != 0)
+			return false;
+	return true;
+}
 
-	return 0;
+
+unsignllongint smallest_multiple_brute(int max_div)
+{
+	unsignllongint max_multiple = 1, next_multiple;
+	for (int i = 1; i < max_div; ++i)
+		max_multiple *= i;
+
+	for (unsignllongint i = max_multiple - 1; i > 0; --i)
+		if (is_multile_of_brute(max_div, i)) 
+		{
+			next_multiple = i;
+			break;
+		}
+
+	return max_multiple - next_multiple;
 }

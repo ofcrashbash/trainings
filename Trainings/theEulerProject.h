@@ -26,4 +26,4 @@ unsignllongint find_maximal_polindrome(unsignllongint);
 unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num);
 
 //fifth
-int smallest_multiple(int max_div);
+unsignllongint smallest_multiple_brute(int max_div);

@@ -55,7 +55,8 @@ int main(int argc, char ** argv)
 	std::cout << "max palindrome for 7 digit nums : " << find_maximal_palindrome_fast(7) << std::endl;*/
 
 	std::cout << "Task #5 Smallest multiple" << std::endl;
-	std::cout << "Smallest number that can be divided by 1,..,10: " << smallest_multiple(10) << std::endl;
+	std::cout << "Smallest number that can be divided by 1,..,10: " << smallest_multiple_brute(10) << std::endl;
+	std::cout << "Smallest number that can be divided by 1,..,20: " << smallest_multiple_brute(20) << std::endl;
 
 	return 0;
 }

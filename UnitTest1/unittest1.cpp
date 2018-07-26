@@ -116,9 +116,9 @@ namespace UnitTest1
 			//Assert::AreEqual(find_maximal_palindrome_fast(1), 9, L"Palindrome for 1 digit num should be 3*3 = 9"); don't work for this case
 		}
 
-		TEST_METHOD(task_5_smallest_multiple)
+		TEST_METHOD(task_5_smallest_multiple_brute)
 		{
-			Assert::AreEqual(smallest_multiple(10), 2520, L"smallest number that can't be divided by 1,..,10");
+			Assert::AreEqual(smallest_multiple_brute(10), (unsignllongint)2520, L"smallest number that can't be divided by 1,..,10");
 		}
 	};
 }
