@@ -300,3 +300,16 @@ unsignllongint smallest_multiple_brute(int max_div)
 
 	return max_multiple - next_multiple;
 }
+
+
+//TASK 6
+//probably fastes solution
+unsignllongint square_diff(int max_num)
+{
+	unsignllongint sum = 0;
+	for (unsignllongint i = 1; i < max_num; ++i)
+		for (unsignllongint j = i + 1; j <= max_num; ++j)
+			sum += i * j;
+
+	return sum *= 2;
+}

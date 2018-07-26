@@ -120,5 +120,12 @@ namespace UnitTest1
 		{
 			Assert::AreEqual(smallest_multiple_brute(10), (unsignllongint)2520, L"smallest number that can't be divided by 1,..,10");
 		}
+
+		TEST_METHOD(task_6_square_diff)
+		{
+			Assert::AreEqual(square_diff(10), (unsignllongint)2640, L"(...)^2 - ...^2 != 2640");
+			Assert::AreEqual(square_diff(0), (unsignllongint)0, L"0^2 - 0^2 != 0");
+			Assert::AreEqual(square_diff(1), (unsignllongint)0, L"1^2 - 1^2 != 0");
+		}
 	};
 }
