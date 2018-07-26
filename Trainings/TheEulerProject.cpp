@@ -313,3 +313,35 @@ unsignllongint square_diff(int max_num)
 
 	return sum *= 2;
 }
+
+
+//Task 7
+//primes
+unsignllongint prime(int num)
+{
+	std::vector<unsignllongint> prime_vector;
+	prime_vector.reserve(num);
+	unsignllongint first_prime = 2;
+	prime_vector.push_back(first_prime);
+
+	unsignllongint i = first_prime + 1;
+	
+	while (prime_vector.size() < num)
+	{
+		bool is_prime = true;
+		for (auto prime : prime_vector)
+			if (i % prime == 0)
+			{
+				is_prime = false;
+				break;
+			}
+		
+		if (is_prime)
+			prime_vector.push_back(i);
+
+		i += 2;
+	}
+
+
+	return prime_vector.back();
+}

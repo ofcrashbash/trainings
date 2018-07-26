@@ -127,5 +127,12 @@ namespace UnitTest1
 			Assert::AreEqual(square_diff(0), (unsignllongint)0, L"0^2 - 0^2 != 0");
 			Assert::AreEqual(square_diff(1), (unsignllongint)0, L"1^2 - 1^2 != 0");
 		}
+		
+		TEST_METHOD(task_7_primes)
+		{
+			Assert::AreEqual(prime(8), (unsignllongint)19, L"8 prime should be 19");
+			Assert::AreEqual(prime(1), (unsignllongint)2, L"first prime - 2");
+			Assert::AreEqual(prime(3), (unsignllongint)5, L"third - 5");
+		}
 	};
 }

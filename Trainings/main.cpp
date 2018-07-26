@@ -59,10 +59,14 @@ int main(int argc, char ** argv)
 	std::cout << "Smallest number that can be divided by 1,..,20: " << smallest_multiple_brute(20) << std::endl;*/
 
 	
-	std::cout << "Task #6 Smallest multiple" << std::endl;
+	/*std::cout << "Task #6 Smallest multiple" << std::endl;
 	std::cout << "(1+2+..+3)^2 - 1^2 - 2^2 - .. - 3^2 = " << square_diff(3) << std::endl;
 	std::cout << "(1+2+..+10)^2 - 1^2 - 2^2 - .. - 10^2 = " << square_diff(10) << std::endl;
-	std::cout << "(1+2+..+100)^2 - 1^2 - 2^2 - .. - 100^2 =  " << square_diff(100) << std::endl;
+	std::cout << "(1+2+..+100)^2 - 1^2 - 2^2 - .. - 100^2 =  " << square_diff(100) << std::endl;*/
+
+	std::cout << "Task #7 Primes" << std::endl;
+	std::cout << "first prime - " << prime(2) << std::endl;
+	std::cout << "tenth prime - " << prime(100000) << std::endl;
 
 
 	return 0;

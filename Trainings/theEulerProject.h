@@ -30,3 +30,6 @@ unsignllongint smallest_multiple_brute(int max_div);
 
 //sixth
 unsignllongint square_diff(int max_num);
+
+//seventh
+unsignllongint prime(int num);
