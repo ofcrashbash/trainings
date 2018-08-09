@@ -1,4 +1,4 @@
-#include "stl_experience.h"
+﻿#include "stl_experience.h"
 
 //docs http://www.cplusplus.com/reference/vector/vector/
 int vetor_test() {
@@ -165,4 +165,522 @@ int array_test()
 	std::cout << arr.max_size() << std::endl;
 
 	return 0;
+}
+
+
+struct coord
+{
+	int x, y;
+};
+
+bool operator==(const coord &l, const coord &r)
+{
+	return l.x == r.x && l.y == r.y;
+}
+
+//hash template specialization
+template<>
+struct std::hash<coord>
+{
+	using argument_type = coord;
+	using result_type = std::size_t;
+	result_type operator()(const argument_type &c) const
+	{
+		return static_cast<result_type>(c.x) +
+			static_cast<result_type>(c.y);
+	}
+};
+
+namespace stl_book {
+	namespace first {
+		void decomposition(void)
+		{
+			//old approach
+			std::pair<int, int> divide_remainder{ 3, 4 };
+			const auto result{ divide_remainder };
+			std::cout << "16 / 3 is "
+				<< result.first << " with a remainder of "
+				<< result.second << std::endl;
+
+			//C++17 approach
+			//also known ass syntax sugar
+			auto[first, second] = divide_remainder;
+
+			//also it is valid for tuples
+			std::tuple<std::string, std::chrono::system_clock::time_point, unsigned> some_value{ "lalal", std::chrono::system_clock::now(), 1 };
+			auto[str, time, usign] = some_value;
+
+			//struct decomposotion
+			struct
+			{
+				int a;
+				int b[2];
+				std::string c = "lalalala";
+			} my_str;
+			auto[a, b, c] = my_str;
+			std::cout << c << std::endl;
+			//poiters.. perfomance efficient
+			auto&[ap, bp, cp] = my_str;
+			std::cout << cp << std::endl;
+
+			//it pobably doesn't work with ordinar arrays
+			//int b[3]{ 1,2,3 };
+			//auto[b1, b2, b3] = b;
+
+
+			//cool iterating over map
+			std::map<std::string, __int64> animals{
+				{ "humans", 7000000000 },
+				{ "chickens", 17863376000 },
+				{ "camels", 24246291 },
+				{ "sheep", 1086881528 },
+				/* … */
+			};
+
+
+			// in moment of iterating over map we are receiving pairs: key - value
+			for (const auto &[animal, count] : animals)
+				std::cout << animal << " " << count << std::endl;
+
+
+		}
+
+		void name_visibility(void)
+		{
+			if (auto trig = true; trig)
+				std::cout << "lala" << std::endl;
+
+			switch (auto key = 'l'; key)
+			{
+			case 'l':
+				break;
+			default:
+				break;
+			}
+		}
+
+		void curvly_bracket_initialization()
+		{
+			int x = 1;
+			int y{ 1 };
+			int z{ 1 };
+
+			std::vector<int> v1{ 1,2,3 };
+			std::vector<int> w = { 1,2,3 };
+			//both gives [1,2,3] but!..
+			//NOTE!!!!
+			//next vector holds 10 elements with value 20!!!
+			std::vector<int> q = { 10,20 };
+
+
+			//with using keyword AUTO
+
+			//x is type of std::initializer_list<int>
+			//TODO what is initializer_list
+			auto xx = { 1 };
+			auto yy = { 1, 2 };
+			//auto zz = {1,2,3.0} - throws erro
+
+			//almost similiar but a little different syntax:
+			auto zz{ 1 }; //int
+			//auto ww{ 1,2 }; - throws error
+
+
+		}
+
+
+		void automatic_template_type()
+		{
+			std::pair my_pair(123, "abc");
+			std::tuple my_tuple(123, 12.3, "abc");
+
+			//TODO!! example dosn't work
+			//sum; string_sum{ std::string{ "abc" }, "def" };
+			//sum ss { 1u, 2.0, 3, 4.0f };
+		}
+
+		template <typename T>
+		class adable
+		{
+			T val;
+		public:
+
+			adable(T v) : val{ v } {}
+
+			template <typename U>
+			T add(U x) const
+			{
+				if constexpr (std::is_same_v<T, std::vector<U>>)
+				{
+					auto copy(val);
+					for (auto &n : copy)
+						n += x;
+					return copy;
+				}
+				return val + x;
+			}
+		};
+
+		void constrexpr_if()
+		{
+			adable<int>{1}.add(1);
+			std::vector<int> v{ 1, 2, 3 };
+
+			//TODO resolve this
+			//auto result = adable<std::vector<int>>{v}.add(10);
+
+
+			//std::cout << "constrexp result - " << std::endl;
+			//for (auto& el : result)
+			//	std::cout << el << std::endl;
+
+
+		}
+
+
+
+		template <typename ... Ts>
+		auto sum(Ts ... ts)
+		{
+			return (ts + ... + 0);
+		}
+
+		template <typename ... Ts>
+		auto product(Ts ... ts)
+		{
+			return (ts*... * 1);
+		}
+
+		template <typename R, typename... Ts>
+		auto matches(const R& range, Ts ... ts)
+		{
+			return (std::count(std::begin(range), std::end(range), ts) + ...);
+		}
+
+		template <typename R, typename... Ts>
+		bool insert_all(R &set, Ts ... ts)
+		{
+			return (set.insert(ts).second && ...);
+		}
+
+		template <typename T, typename... Ts>
+		bool within(T min, T max, Ts ... ts)
+		{
+			return((min <= ts && ts <= max) && ...);
+		}
+
+		template <typename T, typename... Ts>
+		void insert_all_vec(std::vector<T> &vec, Ts ... ts)
+		{
+			(vec.push_back(ts), ...);
+		}
+
+		void variable_arguments_count()
+		{
+			int the_sum{ sum(1,2,3,4,5,6,7,8,9) };
+			int the_sum_1{ sum() };
+			int the_prod{ product(1,2,3,4,5,6,7,8,9) };
+			int the_prod_1{ product() };
+			std::cout << "Sum : " << the_sum << std::endl;
+			std::cout << "Product : " << the_prod << std::endl;
+
+			std::vector<int> vec{ 1, 2, 3, 4, 6 };
+			std::cout << matches(vec, 1, 2, 3, 4) << std::endl;
+			std::cout << matches(std::string{ "abcdefgh" }, 'a', 'b') << std::endl;
+
+			//TODO doesn't work!!! fcuk
+			//std::cout << insert_all(vec, 7, 8, 9) << std::endl;
+
+			//within
+			std::cout << "within : " << within(0, 10, 1, 2, 3, 4) << std::endl;
+
+			//insert
+			insert_all_vec(vec, 1, 2, 3, 4);
+		}
+	}
+
+	namespace second {
+		void deque()
+		{
+			std::deque<int> dq;
+		
+		}
+
+		void erase_remove_vector(void) {
+			std::vector<int> v{ 1, 2, 3, 2, 5, 2, 6, 2, 4, 8 };
+
+			//removing only some values equals to..
+			const auto new_end(std::remove(begin(v), end(v), 2));
+			v.erase(new_end, end(v));
+			for (auto i : v) {
+				std::cout << i << ", ";
+			}
+			std::cout << std::endl;
+
+			//removing values that satisfies some condition
+			const auto odd([](int i) { return i % 2 != 0; });
+			v.erase(std::remove_if(v.begin(), v.end(), odd), v.end());
+
+			v.shrink_to_fit();
+
+			//removing element in O(1)
+			v = std::vector<int>{18274,234,345,456,456 };
+		}
+
+		void sorted_vector(void)
+		{
+			std::vector<std::string> v{ "some", "sorted", "str", "without", "order", "aaa", "zzz" };
+			std::cout << std::is_sorted(std::begin(v), std::end(v)) << std::endl;
+			std::sort(v.begin(), v.end());
+			std::cout << std::is_sorted(std::begin(v), std::end(v)) << std::endl;
+			auto pos = std::lower_bound(std::begin(v), std::end(v), "lala");
+			v.insert(pos, "lala");
+		}
+
+		struct billionaire {
+			std::string name;
+			double dollars;
+			std::string country;
+		};
+
+		template <typename M>
+		void print(const M &m)
+		{
+			std::cout << "Race palacement:" << std::endl;
+			for (const auto &[placement, driver] : m)
+				std::cout << placement << " : " << driver << std::endl;
+		}
+
+		void insert_into_map(void) 
+		{
+			std::list<billionaire> billionaires{
+				{"Bill Gates", 86.0, "USA"},
+				{"Warren Buffet", 75.6, "USA"},
+				{"Jeff Bezos", 72.8, "USA"},
+				{ "Mark Zuckerberg", 56.0, "USA" },
+				{ "Carlos Slim", 54.5, "Mexico" },
+				// ...
+				{ "Bernard Arnault", 41.5, "France" },
+				// ...
+				{ "Liliane Bettencourt", 39.5, "France" },
+				// ...
+				{ "Wang Jianlin", 31.3, "China" },
+				{ "Li Ka-shing", 31.2, "Hong Kong" }
+				// ...
+				};
+
+			std::map<std::string, std::pair<const billionaire, std::size_t>> m;
+			for (const auto &b : billionaires)
+			{
+				auto[iterator, sucess] = m.try_emplace(b.country, b, 1);
+				if (!sucess)
+					iterator->second.second += 1;
+			}
+
+			for (const auto &[key, value] : m) {
+				const auto &[b, count] = value;
+				std::cout << b.country << " : " << count
+					<< " billionaires. Richest is "
+					<< b.name << " with " << b.dollars
+					<< " B$\n";
+			}
+
+
+			//insertion with hint
+			std::pair<const billionaire, std::size_t> new_el {{ "Oleg Kmechak", 19.1, "UA"}, 1 };
+			m.insert(std::end(m), {"UA", new_el });
+
+			//changing name of key
+			std::map<int, std::string> race_placement{
+				{ 1, "Mario" }, { 2, "Luigi" }, { 3, "Bowser" },
+			    { 4, "Peach" }, { 5, "Yoshi" }, { 6, "Koopa" },
+			    { 7, "Toad" }, { 8, "Donkey Kong Jr." }
+			};
+			print(race_placement);
+			{
+				//в загальному випадку ключі є const і їх не можна змінити,
+				//але після extracr їх можна змінити
+				auto a( race_placement.extract(3) );
+				auto b( race_placement.extract(8) );
+				std::swap(a.key(), b.key());
+				race_placement.insert(std::move(a));
+				race_placement.insert(std::move(b));
+			}
+			print(race_placement);
+
+
+
+		}
+
+		
+		void unordered_map(void)
+		{
+			std::unordered_map<coord, int> m{ {{0,0}, 1}, {{0,1}, 2}, {{2,1}, 3} };
+			for (const auto &[key, value] : m)
+				std::cout << "{(" << key.x << ", " << key.y << "): " << value << "}  ";
+			std::cout << std::endl;
+		}
+
+		void unique_set(void)
+		{
+			std::set<std::string> set;
+			std::istream_iterator<std::string> it{ std::cin };
+			std::istream_iterator<std::string> end;
+			std::copy(it, end, std::inserter(set, set.end()));
+			for (const auto &el : set)
+				std::cout << el << std::endl;
+		}
+
+		//polish notation
+		template <typename IT>
+		double evaluate_rpn(IT it, IT end)
+		{
+			std::stack<double> val_stack;
+			auto pop_stack([&]() {
+				auto r{ val_stack.top() };
+				val_stack.pop();
+				return r;
+			});
+
+			std::map<std::string, double(*)(double, double)> ops{
+				{ "+", [](double a, double b) {return a + b; }},
+				{ "-", [](double a, double b) {return a - b; } },
+				{ "*", [](double a, double b) {return a * b; } },
+				{ "/", [](double a, double b) {return a / b; } },
+				{ "^", [](double a, double b) {return std::pow(a, b); } },
+				{ "%", [](double a, double b) {return std::fmod(a, b); } },
+			};
+
+			for (; it != end; ++it) {
+				std::stringstream ss{ *it };
+				if (double val; ss >> val)
+					val_stack.push(val);
+				else
+				{
+					const auto r{ pop_stack() };
+					const auto l{ pop_stack() };
+					try
+					{
+						const auto & op(ops.at(*it));
+						const double result{ op(l,r) };
+						val_stack.push(result);
+					}
+					catch (const std::out_of_range &)
+					{
+						throw std::invalid_argument(*it);
+					}
+				}
+			}
+
+			return val_stack.top();
+		}
+
+		void working_with_stack(void)
+		{
+			try {
+				std::cout << evaluate_rpn(std::istream_iterator<std::string>{std::cin}, {}) << std::endl;
+			}
+			catch (const std::invalid_argument &e) {
+				std::cout << "Invalid operator: " << e.what() << std::endl;
+			}
+		}
+
+		std::string filter_punctuation(const std::string & s)
+		{
+			const char *forbidden{ ".,:; " };
+			const auto idx_start{ s.find_first_not_of(forbidden) };
+			const auto idx_end{s.find_last_not_of(forbidden)};
+			return s.substr(idx_start, idx_end - idx_start + 1);
+		}
+
+		void map_histogram(void)
+		{
+			using namespace std;
+
+			map<string, size_t> words;
+			int max_word_len{ 0 };
+			string s;
+			while (cin >> s)
+			{
+				auto filtered{ filter_punctuation(s) };
+				max_word_len = max<int>(max_word_len, filtered.length());
+				++words[filtered];
+			}
+
+			vector<pair<string, size_t>> word_counts;
+			word_counts.reserve(words.size());
+			move(begin(words), end(words), back_inserter(word_counts));
+
+			sort(begin(word_counts), end(word_counts), [](const auto &a, const auto &b) {
+				return a.second > b.second;
+			});
+
+			cout << "# " << setw(max_word_len) << "<WORD>" << "#<COUNT>\n";
+			for (const auto&[word, count] : word_counts)
+				cout << setw(max_word_len + 2) << word << " #" << count << endl;
+
+		}
+
+
+		std::string filter_ws(const std::string &s)
+		{
+			const char *ws{ " \r\n\t" };
+			const auto a{ s.find_first_not_of(ws) };
+			const auto b{ s.find_last_not_of(ws) };
+			if (a == std::string::npos)
+			{
+				return {};
+			}
+			return s.substr(a, b - a + 1);
+		}
+
+		void multimap_test(void)
+		{
+			using namespace std;
+			
+			string content{ "ja, ls. sdfsdfsdfs dfsdf sdf sdf sf. sdf ,sd fsdf s, sdfsd f,sd s df sd, ,sdf sdf sdf ,sd fsdf sdf . sdfkfds . dsfk sdk." };
+
+			multimap<size_t, string> ret;
+			const auto end_it{ end(content) };
+			auto it1{ begin(content) };
+			auto it2{ find(it1, end_it,'.') };
+			while (it1 != end_it && it2 != end_it && distance(it1, it2) > 0)
+			{
+				string s{ filter_ws({it1, it2})};
+
+				if (s.length() > 0)
+				{
+					const auto words(count(begin(s), end(s), ' ') + 1);
+					ret.emplace(make_pair(words, move(s)));
+				}
+				it1 = next(it2, 1);
+				it2 = find(it1, end_it, '.');
+			}
+			for (const auto &[word_count, sentence] : ret)
+				cout << word_count << " words: " << sentence << endl;
+		}
+
+		void priority_quene_test(void)
+		{
+			using namespace std;
+
+			using todo_item = pair<size_t, string>;
+			priority_queue<todo_item> q;
+
+			initializer_list<todo_item> il{ 
+				{1, "dishes"},
+				{0, "watch tv"},
+				{2, "do homework"},
+				{0, "read comics"}
+			};
+
+			for (const auto &p : il)
+				q.push(p);
+
+			while (!q.empty()) {
+				cout << q.top().first << ": " << q.top().second << endl;
+				q.pop();
+			}
+		}
+	}
 }

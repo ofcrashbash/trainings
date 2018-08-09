@@ -64,9 +64,26 @@ int main(int argc, char ** argv)
 	std::cout << "(1+2+..+10)^2 - 1^2 - 2^2 - .. - 10^2 = " << square_diff(10) << std::endl;
 	std::cout << "(1+2+..+100)^2 - 1^2 - 2^2 - .. - 100^2 =  " << square_diff(100) << std::endl;*/
 
-	std::cout << "Task #7 Primes" << std::endl;
+	/*stl_book::first::decomposition();
+	stl_book::first::name_visibility();
+	stl_book::first::constrexpr_if();
+	stl_book::first::variable_arguments_count();
+
+	stl_book::second::erase_remove_vector();
+	stl_book::second::sorted_vector();
+	stl_book::second::insert_into_map();
+	stl_book::second::unordered_map();
+	stl_book::second::unique_set();
+	stl_book::second::working_with_stack();
+	stl_book::second::map_histogram();
+	stl_book::second::multimap_test();*/
+	stl_book::second::priority_quene_test();
+
+
+	/*std::cout << "Task #7 Primes" << std::endl;
 	std::cout << "first prime - " << prime(2) << std::endl;
-	std::cout << "tenth prime - " << prime(100000) << std::endl;
+	std::cout << "tenth prime - " << prime(100000) << std::endl;*/
+
 
 
 	return 0;
