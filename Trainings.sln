@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Trainings", "Trainings\Trai
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{2C8EC652-4B15-46F1-A3F5-1B91207D6AF3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Open_CV", "Open_CV\Open_CV.vcxproj", "{EC58219C-0D96-45EA-929F-C18AF54FD7BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{2C8EC652-4B15-46F1-A3F5-1B91207D6AF3}.Release|x64.Build.0 = Release|x64
 		{2C8EC652-4B15-46F1-A3F5-1B91207D6AF3}.Release|x86.ActiveCfg = Release|Win32
 		{2C8EC652-4B15-46F1-A3F5-1B91207D6AF3}.Release|x86.Build.0 = Release|Win32
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Debug|x64.ActiveCfg = Debug|x64
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Debug|x64.Build.0 = Debug|x64
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Debug|x86.ActiveCfg = Debug|Win32
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Debug|x86.Build.0 = Debug|Win32
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Release|x64.ActiveCfg = Release|x64
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Release|x64.Build.0 = Release|x64
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Release|x86.ActiveCfg = Release|Win32
+		{EC58219C-0D96-45EA-929F-C18AF54FD7BA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
