@@ -1,23 +1,16 @@
-﻿# CMakeList.txt : Top-level CMake project file, do global configuration
-# and include sub-projects here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 2.6)
+project (CmakeProject)
 
-project ("CMakeProject")
-
+# The version number.
 set (CMakeProject_VERSION_MAJOR 1)
 set (CMakeProject_VERSION_MINOR 0)
 
 # configure a header file to pass some of the CMake settings
-# to the source
-
+# to the source code
 configure_file (
-"${PROJECT_SOURCE_DIR}/CMakeProject/CMakeProjectConfig.h.in"
-"${PROJECT_BINARY_DIR}/CMakeProject/CMakeProjectConfig.h"
+ "CMakeProject/CmakeProjectConfig.h.in"
+ "CMakeProject/CmakeProjectConfig.h"
 )
 
-# include_directories("${PROJECT_BINARY_DIR}/CMakeProject")
-
-
-# Include sub-projects.
-add_subdirectory ("CMakeProject")
+# add the executable
+add_executable(CmakeProject "CmakeProject/CmakeProject.cpp")

@@ -1,15 +1,13 @@
 ﻿// A simple program that computes the square root of a number
+#include "CMakeProjectConfig.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include "CMakeProjectConfig.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	if (argc < 2)
-	{
-		fprintf(stdout, "%s Version %d.%d\n",
-			argv[0],
+	if (argc < 2) {
+		fprintf(stdout, "%s Version %d.%d\n", argv[0], 
 			CMakeProject_VERSION_MAJOR,
 			CMakeProject_VERSION_MINOR);
 		fprintf(stdout, "Usage: %s number\n", argv[0]);
@@ -17,7 +15,6 @@ int main(int argc, char *argv[])
 	}
 	double inputValue = atof(argv[1]);
 	double outputValue = sqrt(inputValue);
-	fprintf(stdout, "The square root of %g is %g\n",
-		inputValue, outputValue);
+	fprintf(stdout, "The square root of %g is %g\n", inputValue, outputValue);
 	return 0;
 }
