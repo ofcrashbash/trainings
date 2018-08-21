@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DisplayImage.cpp" />
     <ClCompile Include="PlayVideo.cpp" />
   </ItemGroup>
