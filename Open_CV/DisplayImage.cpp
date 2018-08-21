@@ -1,12 +1,9 @@
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 
-using namespace cv;
 using namespace std;
 
-int main(int argc, char** argv)
+int DisplayImage(int argc, char** argv)
 {
 	if (argc != 2)
 	{
@@ -14,8 +11,8 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	Mat image;
-	image = imread(argv[1], IMREAD_COLOR); // Read the file
+	cv::Mat image;
+	image = cv::imread(argv[1], cv::IMREAD_COLOR); // Read the file
 
 	if (image.empty()) // Check for invalid input
 	{
@@ -23,9 +20,9 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	namedWindow("Display window", WINDOW_AUTOSIZE); // Create a window for display.
+	cv::namedWindow("Display window", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	imshow("Display window", image); // Show our image inside it.
 
-	waitKey(0); // Wait for a keystroke in the window
+	cv::waitKey(0); // Wait for a keystroke in the window
 	return 0;
 }
