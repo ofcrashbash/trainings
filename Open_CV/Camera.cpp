@@ -4,7 +4,7 @@
 using namespace cv;
 using namespace std;
 
-enum class tFilters {erode, dilate, gaussian, laplacian, invert, eq_hist, LAST_EL};
+enum class tFilters {erode, dilate, gaussian, laplacian, invert, eq_hist, color_tracking, LAST_EL};
 // Special behavior for ++Colors
 tFilters& operator++(tFilters &f) {
 	using IntType = typename std::underlying_type<tFilters>::type;
@@ -12,6 +12,18 @@ tFilters& operator++(tFilters &f) {
 	if (f == tFilters::LAST_EL)
 		f = static_cast<tFilters>(0);
 	return f;
+}
+
+void CallBackFunc(int event, int x, int y, int flags, void* userdata)
+{
+	if (event == EVENT_LBUTTONDOWN)
+		cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+	else if (event == EVENT_RBUTTONDOWN)
+		cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+	else if (event == EVENT_MBUTTONDOWN)
+		cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+	else if (event == EVENT_MOUSEMOVE)
+		cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -30,14 +42,46 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-
+	//Creating main window
 	string window_name_1 = "camera feed";
 	namedWindow(window_name_1);
+
+	Mat frame_line;
+	int iLowH = 136, iHighH = 179;
+	int iLowS = 70, iHighS = 255;
+	int iLowV = 0, iHighV = 255;
+
+	int iLastX = -1;
+	int iLastY = -1;
+
+	//Create trackbars in "Control" window
+	createTrackbar("LowH", window_name_1, &iLowH, 179); //Hue (0 - 179)
+	createTrackbar("HighH", window_name_1, &iHighH, 179);
+
+	createTrackbar("LowS", window_name_1, &iLowS, 255); //Saturation (0 - 255)
+	createTrackbar("HighS", window_name_1, &iHighS, 255);
+
+	createTrackbar("LowV", window_name_1, &iLowV, 255); //Value (0 - 255)
+	createTrackbar("HighV", window_name_1, &iHighV, 255);
+
+	setMouseCallback(window_name_1, CallBackFunc, NULL);
+
+	//Adding slider to UI
+	int iSliderValue1 = 0;
+	createTrackbar("Brightness", window_name_1, &iSliderValue1, 360);
+
+	auto width = cap_back.get(CAP_PROP_FRAME_WIDTH);
+	auto height = cap_back.get(CAP_PROP_FRAME_HEIGHT);
+
+	
+	double dM01, dM10, dArea;
+	Moments oMoments;
 
 	tFilters cur_filter = tFilters::invert;
 	while (true)
 	{
-		Mat frame_front, frame_back, cur_frame;
+		Mat frame_front, frame_back, cur_frame, frame_thresholded;
+		
 
 		bool bSuccess = cap_front.read(frame_front);
 		if (!bSuccess)
@@ -54,6 +98,9 @@ int main(int argc, char* argv[])
 			cin.get();
 			break;
 		}
+
+		if( frame_line.empty())
+			frame_line = Mat::zeros(Size(width, height), frame_back.type());
 		/*
 		Make changes to frame
 			1 - Constrast
@@ -62,7 +109,12 @@ int main(int argc, char* argv[])
 		etc..
 		*/
 
+
 		cur_frame = frame_back;
+		//Rotation matrix
+		Mat matRot = getRotationMatrix2D(Point(width / 2, height / 2), iSliderValue1, 1);
+		//Affine transformation
+		warpAffine(cur_frame, cur_frame, matRot, cur_frame.size(), INTER_LINEAR, 1, Scalar());
 
 		vector<Mat> vec_channels;
 		switch (cur_filter)
@@ -80,16 +132,46 @@ int main(int argc, char* argv[])
 			erode(cur_frame, cur_frame, getStructuringElement(MORPH_RECT, Size(5, 5)));
 			break;
 		case tFilters::gaussian:
-			blur(cur_frame, cur_frame, Size(3,3));
+			blur(cur_frame, cur_frame, Size(3, 3));
 			break;
 		case tFilters::invert:
 			cur_frame.convertTo(cur_frame, -1, -1, 255);
 			break;
 		case tFilters::dilate:
-			dilate(cur_frame, cur_frame, getStructuringElement(MORPH_RECT, Size(5, 5)), Point(-1,-1), 2);
+			dilate(cur_frame, cur_frame, getStructuringElement(MORPH_RECT, Size(5, 5)), Point(-1, -1), 2);
 			break;
 		case tFilters::laplacian:
 			Laplacian(cur_frame, cur_frame, 0);
+			break;
+		case tFilters::color_tracking:
+			cvtColor(frame_back, frame_back, COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
+			inRange(frame_back, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), frame_back); //Threshold the image
+
+			//morphological opening (remove small objects from the foreground)
+			erode(frame_back, frame_back, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+			dilate(frame_back, frame_back, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+
+			//morphological closing (fill small holes in the foreground)
+			dilate(frame_back, frame_back, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+			erode(frame_back, frame_back, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+
+			oMoments = moments(frame_back);
+			dM01 = oMoments.m01;
+			dM10 = oMoments.m10;
+			dArea = oMoments.m00;
+			if (dArea > 0)
+			{
+				int posY = dM01 / dArea;
+				int posX = dM10 / dArea;
+				if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0) {
+					//Draw a red line from the previous point to the current point
+					
+					line(frame_line, Point(posX, posY), Point(iLastX, iLastY), Scalar(25, 255, 255), 2);
+				}
+				cur_frame += frame_line;
+				iLastX = posX;
+				iLastY = posY;
+			}
 			break;
 		default:
 			cout << "No such filter" << endl;
@@ -98,8 +180,9 @@ int main(int argc, char* argv[])
 
 		imshow(window_name_1, cur_frame);
 
-		auto key = waitKey(10);
-		cout << "Pressed key: " << key << endl;
+
+
+		auto key = waitKey(2);
 		if (key == 27)
 		{
 			cout << "Esc is presse by user" << endl;
