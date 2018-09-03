@@ -1,0 +1,3 @@
+INDEX VERSION 1.127+C:\Users\ofcra\source\Trainings\.workspace\.metadata\.plugins\org.eclipse.jdt.core
+1706886027.index
+3609623544.index

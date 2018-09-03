@@ -23,6 +23,7 @@
     <ProjectGuid>{5BE84E2B-D16B-4293-93DA-6883E3B42E6C}</ProjectGuid>
     <RootNamespace>Trainings</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <ProjectName>Eulertasks</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -117,11 +118,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stl_experience.cpp" />
     <ClCompile Include="TheEulerProject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stl_experience.h" />
     <ClInclude Include="theEulerProject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
