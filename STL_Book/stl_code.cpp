@@ -1,5 +1,21 @@
 ﻿#include "stl_code.h"
 
+void LOG_PRINT(string str)
+{
+	cout << endl << endl;
+	cout << "-------------------------" << endl;
+	cout << str << endl << endl;
+}
+template <typename T>
+void PRINT_ITERABLE(T vec, string str = "")
+{
+	cout << str << endl;
+	cout << "{ ";
+	for (auto& el : vec)
+		cout << el << ", ";
+	cout << " }" << endl;
+}
+
 //docs http://www.cplusplus.com/reference/vector/vector/
 int vetor_test() {
 	std::vector<int> vec;
@@ -113,7 +129,6 @@ int vetor_test() {
 	return 0;
 }
 
-
 int map_test()
 {
 	std::map<std::string, char> map;
@@ -167,7 +182,6 @@ int array_test()
 	return 0;
 }
 
-
 struct coord
 {
 	int x, y;
@@ -195,6 +209,10 @@ namespace stl_book {
 	namespace first {
 		void decomposition(void)
 		{
+			cout << endl;
+			cout << "###################" << endl;
+			cout << "decomposiotion test" << endl;
+
 			//old approach
 			std::pair<int, int> divide_remainder{ 3, 4 };
 			const auto result{ divide_remainder };
@@ -207,12 +225,11 @@ namespace stl_book {
 			auto[first, second] = divide_remainder;
 
 			//also it is valid for tuples
-			std::tuple<std::string, std::chrono::system_clock::time_point, unsigned> some_value{ "lalal", std::chrono::system_clock::now(), 1 };
+			std::tuple some_value{ "lalal", std::chrono::system_clock::now(), 1 };
 			auto[str, time, usign] = some_value;
 
 			//struct decomposotion
-			struct
-			{
+			struct{
 				int a;
 				int b[2];
 				std::string c = "lalalala";
@@ -224,12 +241,14 @@ namespace stl_book {
 			std::cout << cp << std::endl;
 
 			//it pobably doesn't work with ordinar arrays
-			//int b[3]{ 1,2,3 };
-			//auto[b1, b2, b3] = b;
+			cout << "array decomposition" << endl;
+			int f[]{1, 2};
+			auto&[b1, b2] = f;
+			cout << "b1 = " << b1 << "; b2 = " << b2 << endl;
 
 
 			//cool iterating over map
-			std::map<std::string, __int64> animals{
+			map<string, __int64> animals{
 				{ "humans", 7000000000 },
 				{ "chickens", 17863376000 },
 				{ "camels", 24246291 },
@@ -240,7 +259,7 @@ namespace stl_book {
 
 			// in moment of iterating over map we are receiving pairs: key - value
 			for (const auto &[animal, count] : animals)
-				std::cout << animal << " " << count << std::endl;
+				cout << animal << " " << count << endl;
 
 
 		}
@@ -261,17 +280,25 @@ namespace stl_book {
 
 		void curvly_bracket_initialization()
 		{
-			int x = 1;
-			int y{ 1 };
+			LOG_PRINT("curvly bracket initialization");
+
+			int f = { 1 };
+			auto x = int{1};
 			int z{ 1 };
 
-			std::vector<int> v1{ 1,2,3 };
-			std::vector<int> w = { 1,2,3 };
+			PRINT_ITERABLE(vector{1,2,3}, "vector{ 1,2,3 }");
+			
+			PRINT_ITERABLE(vector{ 1,2,3 }, "vector{ 1,2,3 }");
 			//both gives [1,2,3] but!..
 			//NOTE!!!!
 			//next vector holds 10 elements with value 20!!!
-			std::vector<int> q = { 10,20 };
+			vector q = { 10, 20};
+			PRINT_ITERABLE(q, "vector q = { 10, 20 }");
 
+			PRINT_ITERABLE(vector{ 10 , 20 }, "vector q2{ 10, 20 }");
+
+			vector q3( 10, 20 );
+			PRINT_ITERABLE(q3, "vector q3( 10, 20 )");
 
 			//with using keyword AUTO
 
@@ -279,24 +306,21 @@ namespace stl_book {
 			//TODO what is initializer_list
 			auto xx = { 1 };
 			auto yy = { 1, 2 };
+			PRINT_ITERABLE(yy, "auto yy = { 1, 2 };");
+
+			//auto zz{ 1, 2 }; - error
+			//eqauls to last element..3
+			auto h = (1, 2, 3);
 			//auto zz = {1,2,3.0} - throws erro
 
 			//almost similiar but a little different syntax:
 			auto zz{ 1 }; //int
 			//auto ww{ 1,2 }; - throws error
-
-
 		}
 
-
-		void automatic_template_type()
-		{
-			std::pair my_pair(123, "abc");
-			std::tuple my_tuple(123, 12.3, "abc");
-
-			//TODO!! example dosn't work
-			//sum; string_sum{ std::string{ "abc" }, "def" };
-			//sum ss { 1u, 2.0, 3, 4.0f };
+		void automatic_template_type(){
+			pair my_pair(123, "abc");
+			tuple my_tuple(123, 12.3, "abc");
 		}
 
 		template <typename T>
@@ -323,7 +347,7 @@ namespace stl_book {
 
 		void constrexpr_if()
 		{
-			adable<int>{1}.add(1);
+			adable{1}.add(1);
 			std::vector<int> v{ 1, 2, 3 };
 
 			//TODO resolve this
@@ -336,8 +360,6 @@ namespace stl_book {
 
 
 		}
-
-
 
 		template <typename ... Ts>
 		auto sum(Ts ... ts)
@@ -354,7 +376,7 @@ namespace stl_book {
 		template <typename R, typename... Ts>
 		auto matches(const R& range, Ts ... ts)
 		{
-			return (std::count(std::begin(range), std::end(range), ts) + ...);
+			return (count(begin(range), end(range), ts) + ...);
 		}
 
 		template <typename R, typename... Ts>
@@ -370,7 +392,7 @@ namespace stl_book {
 		}
 
 		template <typename T, typename... Ts>
-		void insert_all_vec(std::vector<T> &vec, Ts ... ts)
+		void insert_all_vec(vector<T> &vec, Ts ... ts)
 		{
 			(vec.push_back(ts), ...);
 		}
@@ -381,59 +403,55 @@ namespace stl_book {
 			int the_sum_1{ sum() };
 			int the_prod{ product(1,2,3,4,5,6,7,8,9) };
 			int the_prod_1{ product() };
-			std::cout << "Sum : " << the_sum << std::endl;
-			std::cout << "Product : " << the_prod << std::endl;
+			cout << "Sum : " << the_sum << endl;
+			cout << "Product : " << the_prod << endl;
+			
+			//TODO initializer_list - what is it?
+			vector<int> v = { 1, 2, 3, 4, 5, 6 };
+			cout << matches(v, 1, 2, 3, 4) << endl;
+			cout << matches(string{ "abcdefgh" }, 'a', 'b') << endl;
 
-			std::vector<int> vec{ 1, 2, 3, 4, 6 };
-			std::cout << matches(vec, 1, 2, 3, 4) << std::endl;
-			std::cout << matches(std::string{ "abcdefgh" }, 'a', 'b') << std::endl;
-
-			//TODO doesn't work!!! fcuk
-			//std::cout << insert_all(vec, 7, 8, 9) << std::endl;
+			//cout << insert_all(v, 7, 8, 9) << endl;
 
 			//within
-			std::cout << "within : " << within(0, 10, 1, 2, 3, 4) << std::endl;
+			cout << "within : " << within(0, 10, 1, 2, 3, 4) << endl;
 
 			//insert
-			insert_all_vec(vec, 1, 2, 3, 4);
+			insert_all_vec(v, 1, 2, 3, 4);
 		}
 	}
 
 	namespace second {
-		void deque()
-		{
-			std::deque<int> dq;
-
+		void deque_test(){
+			deque<int> dq;
 		}
 
 		void erase_remove_vector(void) {
+			LOG_PRINT("erase_remove_vector");
 			std::vector<int> v{ 1, 2, 3, 2, 5, 2, 6, 2, 4, 8 };
 
 			//removing only some values equals to..
-			const auto new_end(std::remove(begin(v), end(v), 2));
+			const auto new_end(remove(begin(v), end(v), 2));
 			v.erase(new_end, end(v));
-			for (auto i : v) {
-				std::cout << i << ", ";
-			}
-			std::cout << std::endl;
+			PRINT_ITERABLE(v, "v after erase");
 
 			//removing values that satisfies some condition
 			const auto odd([](int i) { return i % 2 != 0; });
-			v.erase(std::remove_if(v.begin(), v.end(), odd), v.end());
+			v.erase(remove_if(v.begin(), v.end(), odd), v.end());
+			PRINT_ITERABLE(v, "v after i % 2 != 0");
 
 			v.shrink_to_fit();
-
-			//removing element in O(1)
-			v = std::vector<int>{ 18274,234,345,456,456 };
 		}
 
 		void sorted_vector(void)
 		{
-			std::vector<std::string> v{ "some", "sorted", "str", "without", "order", "aaa", "zzz" };
-			std::cout << std::is_sorted(std::begin(v), std::end(v)) << std::endl;
-			std::sort(v.begin(), v.end());
-			std::cout << std::is_sorted(std::begin(v), std::end(v)) << std::endl;
-			auto pos = std::lower_bound(std::begin(v), std::end(v), "lala");
+			vector<string> v{ "some", "sorted", "str", "without", "order", "aaa", "zzz" };
+			cout << is_sorted(begin(v), end(v)) << endl;
+			sort(v.begin(), v.end());
+			cout << is_sorted(begin(v), end(v)) << endl;
+
+			//to preserve order
+			auto pos = lower_bound(begin(v), end(v), "lala");
 			v.insert(pos, "lala");
 		}
 
@@ -517,18 +535,19 @@ namespace stl_book {
 		{
 			std::unordered_map<coord, int> m{ {{0,0}, 1}, {{0,1}, 2}, {{2,1}, 3} };
 			for (const auto &[key, value] : m)
-				std::cout << "{(" << key.x << ", " << key.y << "): " << value << "}  ";
-			std::cout << std::endl;
+				cout << "{(" << key.x << ", " << key.y << "): " << value << "}  ";
+			cout << endl;
 		}
 
 		void unique_set(void)
 		{
-			std::set<std::string> set;
-			std::istream_iterator<std::string> it{ std::cin };
-			std::istream_iterator<std::string> end;
-			std::copy(it, end, std::inserter(set, set.end()));
+			cout << "unique set" << endl;
+			set<string> set;
+			istream_iterator<string> it{ cin };
+			istream_iterator<string> end;
+			copy(it, end, inserter(set, set.end()));
 			for (const auto &el : set)
-				std::cout << el << std::endl;
+				cout << el << endl;
 		}
 
 		//polish notation
@@ -577,6 +596,8 @@ namespace stl_book {
 
 		void working_with_stack(void)
 		{
+			std::cout << "working with stack" << std::endl;
+			std::cout << "polish notation" << std::endl;
 			try {
 				std::cout << evaluate_rpn(std::istream_iterator<std::string>{std::cin}, {}) << std::endl;
 			}
@@ -595,6 +616,8 @@ namespace stl_book {
 
 		void map_histogram(void)
 		{
+			std::cout << "map histogram" << std::endl;
+
 			using namespace std;
 
 			map<string, size_t> words;
@@ -603,7 +626,7 @@ namespace stl_book {
 			while (cin >> s)
 			{
 				auto filtered{ filter_punctuation(s) };
-				max_word_len = max<int>(max_word_len, filtered.length());
+				max_word_len = max<int>(max_word_len, (int)filtered.length());
 				++words[filtered];
 			}
 
@@ -636,6 +659,7 @@ namespace stl_book {
 
 		void multimap_test(void)
 		{
+			std::cout << "multimap test" << std::endl;
 			using namespace std;
 
 			string content{ "ja, ls. sdfsdfsdfs dfsdf sdf sdf sf. sdf ,sd fsdf s, sdfsd f,sd s df sd, ,sdf sdf sdf ,sd fsdf sdf . sdfkfds . dsfk sdk." };

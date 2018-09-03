@@ -21,11 +21,14 @@
 #include <iomanip>
 #include <queue>
 
+using namespace std;
+
 int vetor_test();
 int map_test();
 int list_test();
 int array_test();
 namespace stl_book {
+
 	namespace first {
 		void decomposition(void);
 		void name_visibility(void);
@@ -35,7 +38,7 @@ namespace stl_book {
 		void variable_arguments_count(void);
 	}
 	namespace second {
-		void deque(void);
+		void deque_test(void);
 		void erase_remove_vector(void);
 		void sorted_vector(void);
 		void insert_into_map(void);
