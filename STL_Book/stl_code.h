@@ -49,4 +49,9 @@ namespace stl_book {
 		void multimap_test(void);
 		void priority_quene_test(void);
 	}
+	namespace iter {
+		void custom_iterator_test();
+		void iter_adaptor();
+		void fibonachi_iterator_test();
+	};
 }

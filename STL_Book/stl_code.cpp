@@ -456,22 +456,22 @@ namespace stl_book {
 		}
 
 		struct billionaire {
-			std::string name;
+			string name;
 			double dollars;
-			std::string country;
+			string country;
 		};
 
 		template <typename M>
 		void print(const M &m)
 		{
-			std::cout << "Race palacement:" << std::endl;
+			cout << "Race palacement:" << endl;
 			for (const auto &[placement, driver] : m)
-				std::cout << placement << " : " << driver << std::endl;
+				cout << placement << " : " << driver << endl;
 		}
 
 		void insert_into_map(void)
 		{
-			std::list<billionaire> billionaires{
+			list<billionaire> billionaires{
 				{"Bill Gates", 86.0, "USA"},
 				{"Warren Buffet", 75.6, "USA"},
 				{"Jeff Bezos", 72.8, "USA"},
@@ -487,17 +487,17 @@ namespace stl_book {
 				// ...
 			};
 
-			std::map<std::string, std::pair<const billionaire, std::size_t>> m;
+			map<string, pair<const billionaire, size_t>> m;
 			for (const auto &b : billionaires)
 			{
-				auto[iterator, sucess] = m.try_emplace(b.country, b, 1);
-				if (!sucess)
+				auto[iterator, suссess] = m.try_emplace(b.country, b, 1);
+				if (!suссess)
 					iterator->second.second += 1;
 			}
 
 			for (const auto &[key, value] : m) {
 				const auto &[b, count] = value;
-				std::cout << b.country << " : " << count
+				cout << b.country << " : " << count
 					<< " billionaires. Richest is "
 					<< b.name << " with " << b.dollars
 					<< " B$\n";
@@ -505,11 +505,11 @@ namespace stl_book {
 
 
 			//insertion with hint
-			std::pair<const billionaire, std::size_t> new_el{ { "Oleg Kmechak", 19.1, "UA"}, 1 };
-			m.insert(std::end(m), { "UA", new_el });
+			pair<const billionaire, size_t> new_el{ { "Oleg Kmechak", 19.1, "UA"}, 1 };
+			m.insert(end(m), { "UA", new_el });
 
 			//changing name of key
-			std::map<int, std::string> race_placement{
+			map<int, string> race_placement{
 				{ 1, "Mario" }, { 2, "Luigi" }, { 3, "Bowser" },
 				{ 4, "Peach" }, { 5, "Yoshi" }, { 6, "Koopa" },
 				{ 7, "Toad" }, { 8, "Donkey Kong Jr." }
@@ -520,14 +520,11 @@ namespace stl_book {
 				//але після extracr їх можна змінити
 				auto a(race_placement.extract(3));
 				auto b(race_placement.extract(8));
-				std::swap(a.key(), b.key());
-				race_placement.insert(std::move(a));
-				race_placement.insert(std::move(b));
+				swap(a.key(), b.key());
+				race_placement.insert(move(a));
+				race_placement.insert(move(b));
 			}
 			print(race_placement);
-
-
-
 		}
 
 
@@ -554,24 +551,24 @@ namespace stl_book {
 		template <typename IT>
 		double evaluate_rpn(IT it, IT end)
 		{
-			std::stack<double> val_stack;
+			stack<double> val_stack;
 			auto pop_stack([&]() {
 				auto r{ val_stack.top() };
 				val_stack.pop();
 				return r;
 			});
 
-			std::map<std::string, double(*)(double, double)> ops{
+			map<string, double(*)(double, double)> ops{
 				{ "+", [](double a, double b) {return a + b; }},
 				{ "-", [](double a, double b) {return a - b; } },
 				{ "*", [](double a, double b) {return a * b; } },
 				{ "/", [](double a, double b) {return a / b; } },
-				{ "^", [](double a, double b) {return std::pow(a, b); } },
-				{ "%", [](double a, double b) {return std::fmod(a, b); } },
+				{ "^", [](double a, double b) {return pow(a, b); } },
+				{ "%", [](double a, double b) {return fmod(a, b); } },
 			};
 
 			for (; it != end; ++it) {
-				std::stringstream ss{ *it };
+				stringstream ss{ *it };
 				if (double val; ss >> val)
 					val_stack.push(val);
 				else
@@ -584,9 +581,9 @@ namespace stl_book {
 						const double result{ op(l,r) };
 						val_stack.push(result);
 					}
-					catch (const std::out_of_range &)
+					catch (const out_of_range &)
 					{
-						throw std::invalid_argument(*it);
+						throw invalid_argument(*it);
 					}
 				}
 			}
@@ -596,17 +593,17 @@ namespace stl_book {
 
 		void working_with_stack(void)
 		{
-			std::cout << "working with stack" << std::endl;
-			std::cout << "polish notation" << std::endl;
+			cout << "working with stack" << endl;
+			cout << "polish notation" << endl;
 			try {
-				std::cout << evaluate_rpn(std::istream_iterator<std::string>{std::cin}, {}) << std::endl;
+				cout << evaluate_rpn(istream_iterator<string>{cin}, {}) << endl;
 			}
-			catch (const std::invalid_argument &e) {
-				std::cout << "Invalid operator: " << e.what() << std::endl;
+			catch (const invalid_argument &e) {
+				cout << "Invalid operator: " << e.what() << endl;
 			}
 		}
 
-		std::string filter_punctuation(const std::string & s)
+		string filter_punctuation(const string & s)
 		{
 			const char *forbidden{ ".,:; " };
 			const auto idx_start{ s.find_first_not_of(forbidden) };
@@ -616,9 +613,8 @@ namespace stl_book {
 
 		void map_histogram(void)
 		{
-			std::cout << "map histogram" << std::endl;
+			cout << "map histogram" << endl;
 
-			using namespace std;
 
 			map<string, size_t> words;
 			int max_word_len{ 0 };
@@ -643,7 +639,6 @@ namespace stl_book {
 				cout << setw(max_word_len + 2) << word << " #" << count << endl;
 
 		}
-
 
 		std::string filter_ws(const std::string &s)
 		{
@@ -705,6 +700,136 @@ namespace stl_book {
 				cout << q.top().first << ": " << q.top().second << endl;
 				q.pop();
 			}
+		}
+	}
+
+	namespace iter {
+
+		class num_iterator {
+			int i;
+		public:
+			explicit num_iterator(int position = 0) : i{ position } {};
+			int operator*() const { return i; }
+			num_iterator& operator++() {
+				++i;
+				return *this;
+			}
+			bool operator!=(const num_iterator &other) const{
+				return i != other.i;
+			}
+			bool operator==(const num_iterator &other) const {
+				return !(*this != other);//WTH why in such strange way?
+			}
+
+		};
+
+		class num_range {
+			int a;
+			int b;
+		public:
+			num_range(int from, int to) : a{ from }, b{ to }{}
+			num_iterator begin() const { return num_iterator{ a }; }
+			num_iterator end() const { return num_iterator{ b }; }
+		};
+
+		void custom_iterator_test(){
+			LOG_PRINT("custom_iterator_test");
+			num_range range( 0 , 10 );
+			for (auto i : range)
+				cout << i << " ";
+			cout << endl;
+
+			auto __begin = begin(range);
+			auto __end = end(range);
+			for (; __begin != __end; ++__begin) {
+				auto x = *__begin;
+				cout << x << " ";
+			}
+			cout << endl;
+
+			/*new case of using*/
+			num_range r{ 100, 110 };
+			auto [min_it, max_it] = minmax_element(begin(r), end(r));
+			cout << "min el = " << *min_it << "; max_el = " << *max_it << endl;
+		}
+	
+		void iter_adaptor() {
+			LOG_PRINT("iter_adaptor");
+			istream_iterator<int> it_cin{ cin }, end_cin;
+
+			deque<int> v;
+			copy(it_cin, end_cin, back_inserter(v));
+			PRINT_ITERABLE(v, "back_inserter: enter some values. Ctrl+Z - to proceed, Enter or Space - to distiguish values.");
+
+			istringstream sstr{ "123 456 789" };
+			auto mid_it{ next(begin(v), static_cast<int>(v.size()) / 2) };//TODO why we are using static_cast???
+
+			copy(istream_iterator<int>{sstr}, {}, inserter(v, mid_it));
+			PRINT_ITERABLE(v, "mid inserter");
+
+			initializer_list<int> il2{ -1, -2, -3 };
+			copy(begin(il2), end(il2), front_inserter(v));
+
+			cout << "front inserter" << endl;
+			copy(begin(v), end(v), ostream_iterator<int>{cout, ", "}); cout << endl;
+		}
+
+		class fibonachi_iterator {
+			size_t a{ 0 };
+			size_t b{ 1 };
+			size_t i{ 0 };
+		public:
+			explicit fibonachi_iterator(size_t i_) : i{ i_ } {}
+			fibonachi_iterator() = default;
+			
+			size_t operator*() const {
+				return b;
+			}
+			fibonachi_iterator& operator++() {
+				auto res{ a + b };
+				a = b;
+				b = res;
+				++i;
+				return *this;
+			}
+			bool operator!=(fibonachi_iterator& ob) const {
+				return ob.i != i;
+			}
+		};
+
+		class fibonachi_range {
+			size_t end_n;
+		public:
+			fibonachi_range(size_t n = 0) : end_n{ n } {};
+			fibonachi_iterator begin() const { return fibonachi_iterator{}; }
+			fibonachi_iterator end() const { return fibonachi_iterator{ end_n }; }
+
+		};
+
+		void fibonachi_iterator_test() {
+			LOG_PRINT("fibonachi_iterator_test");
+
+			fibonachi_range fib{ 10 };
+			for (auto i : fib)
+				cout << i << " ";
+			cout << endl;
+		}
+
+		void reverse_iterator_test() {
+			LOG_PRINT("reverse_iterator_test");
+			list<int> l{ 1,2,3,4,5,6,7,8,9,10 };
+
+			cout << "straight iterator" << endl;
+			copy(begin(l), end(l), ostream_iterator<int>{cout, " "});
+			cout << endl;
+
+			cout << "reverse iterator" << endl;
+			copy(rbegin(l), rend(l), ostream_iterator<int>{cout, " "});
+			cout << endl;
+
+			cout << "another reverse iterator (make_reverse_iterator)" << endl;
+			copy(make_reverse_iterator(end(l)), make_reverse_iterator(begin(l)), ostream_iterator<int>{cout, " "});
+			cout << endl;
 		}
 	}
 }
