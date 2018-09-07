@@ -5,7 +5,7 @@ using namespace std;
 void renderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(.1, 0.5, 1.0, 1.0);//clear red
+	glClearColor((GLclampf).1, (GLclampf)0.5, (GLclampf)1.0, (GLclampf)1.0);//clear red
 	glutSwapBuffers();
 }
 
