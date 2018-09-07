@@ -74,8 +74,8 @@
     <LibraryPath>$(OPENCV_DIR)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ofcra\Dev\Libs\OpenCV\install\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ofcra\Dev\Libs\OpenCV\install\x64\vc15\lib;C:\Users\ofcra\Dev\Libs\OpenCV\install\x64\vc15\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -94,11 +94,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ofcra\Dev\Libs\OpenCV\install\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV)\install\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opencv_calib3d400d.lib;opencv_core400d.lib;opencv_dnn400d.lib;opencv_features2d400d.lib;opencv_flann400d.lib;opencv_highgui400d.lib;opencv_imgcodecs400d.lib;opencv_imgproc400d.lib;opencv_ml400d.lib;opencv_objdetect400d.lib;opencv_photo400d.lib;opencv_shape400d.lib;opencv_stitching400d.lib;opencv_superres400d.lib;opencv_video400d.lib;opencv_videoio400d.lib;opencv_videostab400d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\ofcra\Dev\Libs\OpenCV\install\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV)\install\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
