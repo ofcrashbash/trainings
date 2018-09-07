@@ -21,9 +21,15 @@
     <ClCompile Include="glew_and_freeglut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="glfw_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glew_and_freeglut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="glfw_test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
