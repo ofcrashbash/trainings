@@ -1,43 +1,52 @@
 #include "glfw_test.h"
 
-
-void framebuffer_size_callback(GLFWwindow* window, GLsizei width, GLsizei height)
+/*
+	auto fragmentShaderSourceStr = get_file_contents("frag_shader.frag");
+	const GLchar *fragmentShaderSource = fragmentShaderSourceStr.c_str();
+	cout << fragmentShaderSource << endl;
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+*/
+string get_file_contents(const char *filename)
 {
-	cout << "window resize event: " << width <<"x" << height << endl;
-	glViewport(0, 0, width, height);
+	ifstream in(filename, ios::in | ios::binary);
+	/*reading file alg: http://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html*/
+	if (in) return string(istreambuf_iterator<char>(in), istreambuf_iterator<char>());
+
+	throw(errno);
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow *window);
 
-void processInput(GLFWwindow *window)
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+const char *vertexShaderSource = "#version 400 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+const char *fragmentShaderSource = "#version 400 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\n\0";
+
+int glfw_window(int argc, char** argv)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		cout << "Escape pressed" << endl;
-		glfwSetWindowShouldClose(window, true);
-	}
-}
-
-
-int glfw_window(int argc, char** argv) {
-	
-	if (glfwInit())
-		cout << "Initialized correctly" << endl;
-	else
-	{
-		cout << "Initialization faile" << endl;
-		return -1;
-	}
-
+	// glfw: initialize and configure
+	// ------------------------------
+	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	/*Telling GLFW explicitly that we want to use 
-	the core-profile means we'll get access to a smaller 
-	subset of OpenGL features (without backwards-compatible
-	features we no longer need)*/
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	
-	GLsizei win_width{ 1000 }, win_height{ 700 };
-	GLFWwindow* window = glfwCreateWindow(win_width, win_height, "LearnOpenGL", NULL, NULL);
+	// glfw window creation
+	// --------------------
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Learn Open GL", NULL, NULL);
 	if (window == NULL)
 	{
 		cout << "Failed to create GLFW window" << endl;
@@ -45,51 +54,138 @@ int glfw_window(int argc, char** argv) {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	//GLAD Initialization
-	/*We pass GLAD the function to load the adress of 
-	the OpenGL function pointers which is OS-specific.*/
-	if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		cout << "GLAD Initialized" << endl;
-	}
-	else {
+	// glad: load all OpenGL function pointers
+	// ---------------------------------------
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
 		cout << "Failed to initialize GLAD" << endl;
+		glfwTerminate();
 		return -1;
 	}
 
-	/*Setting to OpenGL the size of the rendering window
-	Behind the scenes OpenGL uses the data specified via glViewport
-	to transform the 2D coordinates it processed to coordinates on 
-	your screen. For example, a processed point of location (-0.5,0.5)
-	would (as its final transformation) be mapped to (200,450) in screen
-	coordinates. Note that processed coordinates in OpenGL are between -1 and 1 
-	
-	However, the moment a user resizes the window the viewport should be adjusted as well
-	*/
-	glViewport(0, 0, win_width, win_height);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);//state setting func
+
+	// build and compile our shader program
+	// ------------------------------------
+	// vertex shader
+	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+	// check for shader compile errors
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	// fragment shader
+	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+	// check for shader compile errors
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	// link shaders
+	int shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	// check for linking errors
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	// set up vertex data (and buffer(s)) and configure vertex attributes
+	// ------------------------------------------------------------------
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f, // left  
+		 0.5f, -0.5f, 0.0f, // right 
+		 0.0f,  0.5f, 0.0f  // top   
+	};
+
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+	// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+	glBindVertexArray(0);
 
 
-	//RENDER LOOP
-	while (!glfwWindowShouldClose(window)) {
-		//input
+	// uncomment this call to draw in wireframe polygons.
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// render loop
+	// -----------
+	while (!glfwWindowShouldClose(window))
+	{
+		// input
+		// -----
 		processInput(window);
 
-		//rendering
-		//...
-		/*
-		some other options GL_COLOR_BUFFER_BIT, 
-		GL_DEPTH_BUFFER_BIT and GL_STENCIL_BUFFER_BIT. 
-		*/
-		glClear(GL_COLOR_BUFFER_BIT);//state using func
+		// render
+		// ------
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
+		// draw our first triangle
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// glBindVertexArray(0); // no need to unbind it every time 
 
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
-		/*Cause callbacks associated with events to be called*/
 		glfwPollEvents();
 	}
 
+	// optional: de-allocate all resources once they've outlived their purpose:
+	// ------------------------------------------------------------------------
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+
+	// glfw: terminate, clearing all previously allocated GLFW resources.
+	// ------------------------------------------------------------------
 	glfwTerminate();
 	return 0;
+}
+
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow *window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
 }
