@@ -78,9 +78,9 @@ int sum_of_fibonachi_even_numbers(int max)
 //TODO how about type overflow???
 int fibonachi(int n)
 {
-	double golden_ratio_1 = (1. + std::sqrt(5.)) / 2.;
-	double golden_ratio_2 = (1. - std::sqrt(5.)) / 2.;
-	int value = (int)std::floor( (std::pow(golden_ratio_1, n) - std::pow(golden_ratio_2, n)) / std::sqrt(5.));
+	double golden_ratio_1 = (1. + sqrt(5.)) / 2.;
+	double golden_ratio_2 = (1. - sqrt(5.)) / 2.;
+	int value = (int)floor( (pow(golden_ratio_1, n) - pow(golden_ratio_2, n)) / sqrt(5.));
 	return value;
 }
 int sum_of_fibonachi_even_numbers_fast(int max)
@@ -100,7 +100,7 @@ int sum_of_fibonachi_even_numbers_fast(int max)
 
 //Task 3 
 //Brute Force
-bool is_largest_prime(std::vector<unsignllongint> & prime_vector, unsignllongint number)
+bool is_largest_prime(vector<unsignllongint> & prime_vector, unsignllongint number)
 {
 	for (auto prime : prime_vector)
 		if (number % prime == 0)
@@ -112,7 +112,7 @@ bool is_largest_prime(std::vector<unsignllongint> & prime_vector, unsignllongint
 unsignllongint largest_prime_factor(unsignllongint number)
 {
 	unsignllongint last_prime = 2;
-	std::vector<unsignllongint> primes_vector = { last_prime };
+	vector<unsignllongint> primes_vector = { last_prime };
 	unsignllongint last_number = 2;
 
 	if (number < 1)
@@ -132,13 +132,12 @@ unsignllongint largest_prime_factor(unsignllongint number)
 		primes_vector.push_back(last_number);
 
 		if (number % last_number == 0)
-			std::cout << last_number << std::endl;
 			last_prime = last_number;
 	}
 
 	for (auto prime : primes_vector)
-		std::cout << prime << " ";
-	std::cout << std::endl;
+		cout << prime << " ";
+	cout << endl;
 
 	return last_prime;
 }
@@ -158,9 +157,9 @@ unsignllongint largest_prime_web(unsignllongint number)
 			count++;
 			number /= factor;
 		}
-		std::cout << "{ " << factor << ", " << count << " }" << std::endl;
+		 cout << "{ " << factor << ", " << count << " }" <<  endl;
 	}
-	unsignllongint maxFactor = (unsignllongint)std::sqrt(number);
+	unsignllongint maxFactor = (unsignllongint) sqrt(number);
 	factor = 3;
 	while (number > 1 && factor < maxFactor)
 	{
@@ -173,8 +172,8 @@ unsignllongint largest_prime_web(unsignllongint number)
 				count++;
 				number /= factor;
 			}
-			maxFactor = (unsignllongint)std::sqrt(number);
-			std::cout << "{ " << factor << ", " << count << " }" << std::endl;
+			maxFactor = (unsignllongint) sqrt(number);
+			 cout << "{ " << factor << ", " << count << " }" << endl;
 		}
 		factor += 2;
 	}
@@ -189,7 +188,7 @@ unsignllongint largest_prime_web(unsignllongint number)
 
 bool is_palindrome(unsignllongint val)
 {
-	std::vector<unsignllongint> digits;
+	vector<unsignllongint> digits;
 	digits.reserve(6);
 	auto temp_val = val;
 	unsignllongint modulo = 0;
@@ -202,8 +201,8 @@ bool is_palindrome(unsignllongint val)
 		val /= 10;
 	}
 
-	std::vector<unsignllongint> rev_digits(digits);
-	std::reverse(rev_digits.begin(), rev_digits.end());
+	vector<unsignllongint> rev_digits(digits);
+	reverse(rev_digits.begin(), rev_digits.end());
 
 	if (rev_digits == digits)
 		return true;
@@ -226,11 +225,11 @@ bool is_palindrome_fast(unsignllongint val)
 unsignllongint find_maximal_polindrome(unsignllongint digit_num)
 {
 	unsignllongint max_palindrome = 0;
-	for (unsignllongint i = (unsignllongint)std::pow(10, digit_num) - 1; i > (unsignllongint)std::pow(10, digit_num - 1); --i)
-		for (unsignllongint j = i; j > (unsignllongint)std::pow(10, digit_num - 1); --j)
+	for (unsignllongint i = (unsignllongint)pow(10, digit_num) - 1; i > (unsignllongint)pow(10, digit_num - 1); --i)
+		for (unsignllongint j = i; j > (unsignllongint)pow(10, digit_num - 1); --j)
 			if (is_palindrome_fast(i * j) && i*j > max_palindrome)
 			{
-				std::cout << i <<" * "<< j <<" = " << i * j << std::endl;
+				cout << i <<" * "<< j <<" = " << i * j << endl;
 				max_palindrome = i * j;
 			}
 	return max_palindrome;
@@ -238,19 +237,19 @@ unsignllongint find_maximal_polindrome(unsignllongint digit_num)
 
 unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num)
 {
-	unsignllongint i = (unsignllongint)(std::pow(10, digit_num) - 1);
+	unsignllongint i = (unsignllongint)(pow(10, digit_num) - 1);
 	unsignllongint j, dj, max_palindrome{0};
 	unsignllongint maxi, maxj;
-	while (i > std::pow(10, digit_num - 1))
+	while (i > pow(10, digit_num - 1))
 	{
 		if (i % 11 == 0)
 		{
-			j = (unsignllongint)(std::pow(10, digit_num) - 1);
+			j = (unsignllongint)(pow(10, digit_num) - 1);
 			dj = 1;
 		}
 		else
 		{
-			j = (unsignllongint)(std::floor(std::pow(10, digit_num) / 11) * 11);
+			j = (unsignllongint)(floor(pow(10, digit_num) / 11) * 11);
 			dj = 11;
 		}
 
@@ -268,7 +267,7 @@ unsignllongint find_maximal_palindrome_fast(unsignllongint digit_num)
 		}
 		i -= 1;
 	}
-	std::cout << maxi << " * " << maxj << " = " << max_palindrome << std::endl;
+	cout << maxi << " * " << maxj << " = " << max_palindrome << endl;
 	return max_palindrome;
 }
 
@@ -319,7 +318,7 @@ unsignllongint square_diff(int max_num)
 //primes
 unsignllongint prime(int num)
 {
-	std::vector<unsignllongint> prime_vector;
+	vector<unsignllongint> prime_vector;
 	prime_vector.reserve(num);
 	unsignllongint first_prime = 2;
 	prime_vector.push_back(first_prime);
@@ -350,7 +349,7 @@ unsignllongint prime(int num)
 //Largest product in series
 int largest_product()
 {
-	std::string str = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450";
+	string str = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450";
 
 	return 0;
 }

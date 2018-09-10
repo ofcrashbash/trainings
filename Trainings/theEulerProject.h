@@ -3,6 +3,8 @@
 #include <cmath>
 #include <vector>
 
+using namespace std;
+
 //first task
 int multipliers_of_5_and_3(int max);
 int multipliers_of_5_and_3_fast(int max);
