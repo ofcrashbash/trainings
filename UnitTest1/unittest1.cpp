@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../Trainings/stl_experience.h"
-#include "../Trainings/theEulerProject.h"
+#include "../STL_Book/stl_code.cpp"
+#include "../Trainings/theEulerProject.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -12,12 +12,6 @@ namespace UnitTest1
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
-		{
-			// TODO: Your test code here
-			Assert::AreEqual(vetor_test(), 0, L"mesage");
-		}
-
 		TEST_METHOD(multipliers_brute_test)
 		{
 			Assert::AreEqual(multipliers_of_5_and_3(10), 23, L"sum of mulitpliers below 10 isn't equal to 23");

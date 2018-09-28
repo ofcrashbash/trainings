@@ -85,11 +85,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(GLEW)\include;$(GLFW)\install\include;$(FREEGLUT)\install\include;$(GLAD)\install\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SOURCE)\glew\include;$(SOURCE)\glfw\install\include;$(SOURCE)\freeglut\install\include;$(SOURCE)\glad\install\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(GLEW)\bin\Release\x64;$(FREEGLUT)\install\bin;$(GLEW)\lib\Release\x64;$(FREEGLUT)\install\lib;$(GLFW)\install\lib;$(GLAD)\install\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglutd.lib;opengl32.lib;glew32.lib;glfw3.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SOURCE)\freeglut\install\lib;$(SOURCE)\glew\lib\Debug\x64;$(SOURCE)\glfw\install\lib;$(SOURCE)\glad\install\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglutd.lib;opengl32.lib;glew32d.lib;glfw3dll.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

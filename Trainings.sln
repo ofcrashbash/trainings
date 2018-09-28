@@ -15,8 +15,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STL_Book", "STL_Book\STL_Bo
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonPR", "PythonPR\PythonPR.pyproj", "{6C9B2E4C-D2F2-474B-9359-BB85DDAC4BBC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CUDA_Project", "CUDA_Project\CUDA_Project.vcxproj", "{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,20 +109,6 @@ Global
 		{6C9B2E4C-D2F2-474B-9359-BB85DDAC4BBC}.Release|ARM64.ActiveCfg = Release|Any CPU
 		{6C9B2E4C-D2F2-474B-9359-BB85DDAC4BBC}.Release|x64.ActiveCfg = Release|Any CPU
 		{6C9B2E4C-D2F2-474B-9359-BB85DDAC4BBC}.Release|x86.ActiveCfg = Release|Any CPU
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|ARM.ActiveCfg = Debug|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|ARM64.ActiveCfg = Debug|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|x64.ActiveCfg = Debug|x64
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|x64.Build.0 = Debug|x64
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|x86.ActiveCfg = Debug|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Debug|x86.Build.0 = Debug|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|Any CPU.ActiveCfg = Release|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|ARM.ActiveCfg = Release|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|ARM64.ActiveCfg = Release|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|x64.ActiveCfg = Release|x64
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|x64.Build.0 = Release|x64
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|x86.ActiveCfg = Release|Win32
-		{8EF7FAE9-C3CD-4E7A-AD45-0D86BDBD99C6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
