@@ -1,6 +1,6 @@
 #include <iostream>
 #include "theEulerProject.h"
-#include <limits>
+#include <limits.h>
 
 int main(int argc, char ** argv)
 {
