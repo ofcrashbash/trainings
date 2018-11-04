@@ -27,3 +27,9 @@ target_link_libraries(glfw_test ${GLFW_LIB} ${GLAD_LIB} ${GL_LIBRARY} m pthread 
 add_executable(testgl ${SOURCE_FILES})
 target_link_libraries(testgl glfw_test)
 
+message("installing to ${BUILD_DIR}/OpenGL")
+file(COPY vertex_shader.vert
+    DESTINATION ${BUILD_DIR}/OpenGL)
+file(COPY frag_shader.frag
+    DESTINATION ${BUILD_DIR}/OpenGL)
+

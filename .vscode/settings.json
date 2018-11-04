@@ -1,4 +1,3 @@
 {
-    "python.linting.pylintEnabled": false,
-    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
+    "python.linting.pylintEnabled": false
 }
