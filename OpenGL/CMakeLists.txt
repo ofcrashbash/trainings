@@ -1,6 +1,6 @@
 # Project definition
 cmake_minimum_required(VERSION 3.2)
-project(InitGL CXX)
+project(testgl CXX)
 
 
 set(GLAD_DIR /usr/local/glad_debug)
@@ -19,13 +19,11 @@ set(GL_LIBRARY GL GLU X11)
 
 
 # Source files
-set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(SOURCE_FILES ${SRC_DIR}/main.cpp ${GLAD_DIR}/include/glad/glad ${GLFW_DIR}/include/GLFW/glfw3)
+set(SOURCE_FILES Main.cpp ${GLAD_DIR}/include/glad/glad ${GLFW_DIR}/include/GLFW/glfw3)
 
-
+add_library(glfw_test glfw_test.h glfw_test.cpp )
+target_link_libraries(glfw_test ${GLFW_LIB} ${GLAD_LIB} ${GL_LIBRARY} m pthread ${CMAKE_DL_LIBS})
 # Executable definition and properties
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_executable(testgl ${SOURCE_FILES})
+target_link_libraries(testgl glfw_test)
 
-target_link_libraries(${PROJECT_NAME} ${GLFW_LIB} ${GLAD_LIB} ${GL_LIBRARY} m pthread ${CMAKE_DL_LIBS})
-#target_link_libraries(${PROJECT_NAME}  )
-#target_link_libraries(${PROJECT_NAME} ) #order matters!
