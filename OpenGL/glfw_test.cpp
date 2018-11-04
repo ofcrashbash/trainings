@@ -1,48 +1,35 @@
 #include "glfw_test.h"
 
-/*
-	auto fragmentShaderSourceStr = get_file_contents("frag_shader.frag");
-	const GLchar *fragmentShaderSource = fragmentShaderSourceStr.c_str();
-	cout << fragmentShaderSource << endl;
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-*/
-string get_file_contents(const char *filename)
+
+const char * get_file_contents(const char *filename, string & filestring)
 {
 	ifstream in(filename, ios::in | ios::binary);
 	/*reading file alg: http://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html*/
-	if (in) return string(istreambuf_iterator<char>(in), istreambuf_iterator<char>());
-
-	throw(errno);
+	filestring = string(istreambuf_iterator<char>(in), istreambuf_iterator<char>());
+	return filestring.c_str();
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
 void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const char *vertexShaderSource = "#version 400 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-const char *fragmentShaderSource = "#version 400 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
+const char *chVertexShaderSource;
+const char *chFragShaderSource;
 
 int glfw_window(int argc, char** argv)
 {
+	
 	// glfw: initialize and configure
 	// ------------------------------
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
 	// glfw window creation
 	// --------------------
@@ -70,8 +57,13 @@ int glfw_window(int argc, char** argv)
 	// ------------------------------------
 	// vertex shader
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	
+	string verShaderFromFile;
+	chVertexShaderSource = get_file_contents("vertex_shader.vert", verShaderFromFile);
+
+	glShaderSource(vertexShader, 1, &chVertexShaderSource, NULL);
 	glCompileShader(vertexShader);
+
 	// check for shader compile errors
 	int success;
 	char infoLog[512];
@@ -81,10 +73,15 @@ int glfw_window(int argc, char** argv)
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
+
+
 	// fragment shader
+	string fragShaderFromFile;
+	chFragShaderSource = get_file_contents("frag_shader.frag", fragShaderFromFile);
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glShaderSource(fragmentShader, 1, &chFragShaderSource, NULL);
 	glCompileShader(fragmentShader);
+
 	// check for shader compile errors
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 	if (!success)
@@ -92,24 +89,28 @@ int glfw_window(int argc, char** argv)
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
+
+
 	// link shaders
 	int shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
+
 	// check for linking errors
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
+
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left  
+		-0.5f, -0.5f, 1.0f, // left  
 		 0.5f, -0.5f, 0.0f, // right 
 		 0.0f,  0.5f, 0.0f  // top   
 	};

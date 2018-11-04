@@ -202,7 +202,9 @@ bool is_palindrome(unsignllongint val)
 	}
 
 	vector<unsignllongint> rev_digits(digits);
-	reverse(rev_digits.begin(), rev_digits.end());
+
+	//FIXME: !!
+	//reverse(rev_digits.begin(), rev_digits.end());
 
 	if (rev_digits == digits)
 		return true;

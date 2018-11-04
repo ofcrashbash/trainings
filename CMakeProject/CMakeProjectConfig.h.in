@@ -1,3 +1,0 @@
-// the configured options and settings for Tutorial
-#cmakedefine CMakeProject_VERSION_MAJOR @CMakeProject_VERSION_MAJOR@
-#cmakedefine CMakeProject_VERSION_MINOR @CMakeProject_VERSION_MINOR@

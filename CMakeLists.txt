@@ -1,21 +1,12 @@
-﻿cmake_minimum_required (VERSION 2.6)
-project (CmakeProject)
+cmake_minimum_required(VERSION 3.2)
 
-# The version number.
-set (CMakeProject_VERSION_MAJOR 1)
-set (CMakeProject_VERSION_MINOR 0)
+project(trainings C CXX)
 
-# configure a header file to pass some of the CMake settings
-# to the source code
-# TODO this config doenst generate header file!!
+set(BUILD_DIR ${CMAKE_HOME_DIRECTORY}/build)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/CMakeProject)
-
-configure_file (
- "CMakeProject/CmakeProjectConfig.h.in"
- "CMakeProject/CmakeProjectConfig.h"
- @ONLY
-)
-
-# add the executable
-add_executable(CmakeProject "CmakeProject/CmakeProject.cpp")
+add_subdirectory(OpenGL)
+add_subdirectory(CUDA)
+add_subdirectory(Trainings)
+add_subdirectory(CMake)
+#FIXME: for some reason c++17 doesn't copiles in this folder
+#add_subdirectory(STL_Book) 
