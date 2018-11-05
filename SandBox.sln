@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Eulertasks", "Trainings\Trainings.vcxproj", "{5BE84E2B-D16B-4293-93DA-6883E3B42E6C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EulerProject", "Eulerproject\EulerProject.vcxproj", "{5BE84E2B-D16B-4293-93DA-6883E3B42E6C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{2C8EC652-4B15-46F1-A3F5-1B91207D6AF3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{2C8EC652-4B15-46F1-A3F5-1B91207D6AF3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Open_CV", "Open_CV\Open_CV.vcxproj", "{EC58219C-0D96-45EA-929F-C18AF54FD7BA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCV", "OpenCV\OpenCV.vcxproj", "{EC58219C-0D96-45EA-929F-C18AF54FD7BA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Open_GL", "Open_GL\Open_GL.vcxproj", "{773864A6-C46F-42E2-BD1D-53812BA5F6E7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL", "OpenGL\OpenGL.vcxproj", "{773864A6-C46F-42E2-BD1D-53812BA5F6E7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STL_Book", "STL_Book\STL_Book.vcxproj", "{918DD72F-A4CC-4ADB-B2C8-65A4F4E762E0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STLBook", "STLBook\STLBook.vcxproj", "{918DD72F-A4CC-4ADB-B2C8-65A4F4E762E0}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonPR", "PythonPR\PythonPR.pyproj", "{6C9B2E4C-D2F2-474B-9359-BB85DDAC4BBC}"
 EndProject
