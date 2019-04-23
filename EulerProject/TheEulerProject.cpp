@@ -318,7 +318,7 @@ unsignllongint square_diff(int max_num)
 
 //Task 7
 //primes
-unsignllongint prime(int num)
+unsignllongint prime(unsigned num)
 {
 	vector<unsignllongint> prime_vector;
 	prime_vector.reserve(num);
