@@ -1,5 +1,24 @@
 # SandBox
-Trainings with new tools, techiques, features and programming Kata(s)
+Trainings with new tools, techiques, features etc.
+
+
+1. The Euler project tasks.
+2. OpenCV
+3. OpenGL
+4. C++/STL/Boost
+5. CMake
+6. Unit Testing. TDD. Boost.Test. Google Test.
+7. Python
+and some future plans:
+7. CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.
+8. GoLang.
+9. OpenAI.
+futher possible reading and research:
+https://en.cppreference.com/w/cpp/links/libs - especially Physics and Simulations part.
+https://wiki.python.org/moin/UsefulModules
+https://github.com/golang/go/wiki/Projects
+OpenAI, TensorFlow,
+
 
 ## OpenCV
 
