@@ -6,9 +6,7 @@ Trainings with new tools, techiques, features and programming Kata(s)
 [OpenCV](https://en.wikipedia.org/wiki/OpenCV) (Open source computer vision) is a library of programming functions 
 mainly aimed at real-time computer vision.
 
-### Project set-up
-#### Windows
-Currently build is available only for Windows(Linux is not yet configured in CMake file). 
+### Project set-up on Windows
 
 ##### First Step
 So at first You need __OpenCV__ binaries. 
@@ -33,7 +31,8 @@ _Properties of project->Debugging->Environment_ set to it next macros: Path=$(OP
 
 Thats all, now You can run programs!
 
-#### Linux.
+### Linux.
+Currently build is available only for Windows(Linux is not yet configured in CMake file). 
 TODO
 
 ## OpenGL
