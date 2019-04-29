@@ -8,11 +8,13 @@ Trainings with new tools, techiques, features etc.
 4. C++/STL/Boost
 5. CMake
 6. Unit Testing. TDD. Boost.Test. Google Test.
-7. Python
+7. Python.   
+
 and some future plans:
-7. CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.
-8. GoLang.
-9. OpenAI.
+
+8. CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.
+9. GoLang.
+10. OpenAI.
 futher possible reading and research:
 https://en.cppreference.com/w/cpp/links/libs - especially Physics and Simulations part.
 https://wiki.python.org/moin/UsefulModules
