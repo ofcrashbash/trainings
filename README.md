@@ -2,21 +2,23 @@
 Trainings with new tools, techiques, features etc.
 
 
-1. The Euler project tasks.
-2. OpenCV
-3. OpenGL
-4. C++/STL/Boost
-5. CMake
-6. Unit Testing. TDD. Boost.Test. Google Test.
-7. Python.   
+## Contetns:
+
+1. __The Euler project tasks.__
+2. __OpenCV__
+3. __OpenGL__
+4. __C++/STL/Boost__
+5. __CMake__
+6. __Unit Testing. TDD. Boost.Test. Google Test.__
+7. __Python.__   
 
 and some future plans:
 
-8. CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.
-9. GoLang.
-10. OpenAI.
+8. __CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.__
+9. __GoLang.__
+10. __OpenAI.__
 futher possible reading and research:
-https://en.cppreference.com/w/cpp/links/libs - especially Physics and Simulations part.
+https://en.cppreference.com/w/cpp/links/libs - __especially Physics and Simulations part.__
 https://wiki.python.org/moin/UsefulModules
 https://github.com/golang/go/wiki/Projects
 OpenAI, TensorFlow,
@@ -29,17 +31,17 @@ mainly aimed at real-time computer vision.
 
 ### Project set-up on Windows
 
-##### First Step
+#### 1.First Step
 So at first You need __OpenCV__ binaries. 
 The easiest way to get them is to download last release source archive from [official website](https://opencv.org/releases/) and 
 build it in Debug/Release versions(x64 dlls). There are probably not all binaries from prebuild on official webiste.
 
-##### Second Step
+#### 2.Second Step
 After build, you have to setup environmental variable OPENCV_DIR, to folder where you installed OpenCV.
 
 PS: Visual Studio provide NuGet package manager, unfortunately last version of OpenCV there is 2.4 or wrappers for C#.
 
-##### Third Step
+#### 3.Third Step
 Configuring Visual Studio Project.
 
 1. _Properties of project->VC++ Directories->Include Directories_ - Append path to include dirrectory of OpenCV. $(OPENCV_DIR)/include.   
