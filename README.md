@@ -54,9 +54,9 @@ _Properties of project->Debugging->Environment_ set to it next macros: Path=$(OP
 
 Thats all, now You can run programs!
 
-### Linux.
+### Project set-up onLinux.
 Currently build is available only for Windows(Linux is not yet configured in CMake file). 
-TODO
+[Link to my OneNote notebook with more details](https://onedrive.live.com/view.aspx?resid=5B08D11D78362F2A%213880&id=documents&wd=target%28Computer%20Graphics.one%7C554D37D9-ACD6-4ED9-BB63-56C6EA66C736%2FOpenGL%7C15450641-1CD5-468E-91EE-6827900FBBBD%2F%29).
 
 ## OpenGL
 Crossplatform graphic library. 
@@ -70,12 +70,26 @@ Handles functionality of creating window containing OpenGL context on wide range
 It query and loads OpenGL extensions.
 
 The same functionality provides
-#### [GLFW](https://en.wikipedia.org/wiki/GLFW)
+#### [__GLFW__](https://en.wikipedia.org/wiki/GLFW)
 Handles side with windows, and
 
-#### [GLAD](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library#glad_.28Multi-Language_GL.2FGLES.2FEGL.2FGLX.2FWGL_Loader-Generator.29)
+#### [__GLAD__](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library#glad_.28Multi-Language_GL.2FGLES.2FEGL.2FGLX.2FWGL_Loader-Generator.29)
 Loader of OpenGL.
 
 ### Project set-up on Windows
+Lets describe the easiest way using _GLFW_ and _GLAD_.
+
+#### GLFW:
+Simply download Windows x64 binnaries from [official website](https://www.glfw.org/download.html).
+Extract them and specify environmental variable __GLFW_DIR__.
+
+#### GLAD:
+Download source files(only one header and one source) from [official site](https://glad.dav1d.de/). 
+gl -> Select latest version, Language -> C\C++, Specification -> OpenGL, Profile -> Core, Options -> Generate a Loader.
+And press Generate. Copy downloaded files to your project.
+
+### Project set-up on Linux.
+TODO
+
 
 
