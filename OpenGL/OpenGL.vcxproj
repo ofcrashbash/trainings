@@ -75,9 +75,14 @@
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <SourcePath>$(SourcePath)</SourcePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;</LibraryPath>
+    <SourcePath>$(SourcePath);$(GLAD_DIR)\src</SourcePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(GLFW_DIR)\include;$(GLAD_DIR)\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(GLFW_DIR)\lib-vc2019</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(GLFW)\include;$(IncludePath);$(GLAD_DIR)\include</IncludePath>
+    <LibraryPath>$(GLFW)\lib-vc2019;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(GLAD_DIR)\src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -129,11 +134,12 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\ofcra\Programming_Files_And_Scripts\glew-2.1.0\bin\Release\x64;C:\Users\ofcra\Programming_Files_And_Scripts\FreeGLUT\install\bin;C:\Users\ofcra\Programming_Files_And_Scripts\glew-2.1.0\lib\Release\x64;C:\Users\ofcra\Programming_Files_And_Scripts\FreeGLUT\install\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglutd.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Libs\glad\src\glad.c" />
     <ClCompile Include="glfw_test.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
