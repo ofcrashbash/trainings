@@ -17,13 +17,14 @@ and some future plans:
 8. __CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.__
 9. __GoLang.__
 10. __OpenAI.__
-futher possible reading and research:
+
+futher possible reading and research:  
 https://en.cppreference.com/w/cpp/links/libs - __especially Physics and Simulations part.__
 https://wiki.python.org/moin/UsefulModules
 https://github.com/golang/go/wiki/Projects
 OpenAI, TensorFlow,
 
-
+---
 ## OpenCV
 
 [OpenCV](https://en.wikipedia.org/wiki/OpenCV) (Open source computer vision) is a library of programming functions 
@@ -58,6 +59,7 @@ Thats all, now You can run programs!
 Currently build is available only for Windows(Linux is not yet configured in CMake file). 
 [Link to my OneNote notebook with more details](https://onedrive.live.com/view.aspx?resid=5B08D11D78362F2A%213880&id=documents&wd=target%28Computer%20Graphics.one%7C554D37D9-ACD6-4ED9-BB63-56C6EA66C736%2FOpenGL%7C15450641-1CD5-468E-91EE-6827900FBBBD%2F%29).
 
+---
 ## OpenGL
 Crossplatform graphic library. 
 For each platform are used FreeGLUT, GLEW or GLFW and GLAD to use OpenGL. learnopengl.com suggests to use GLFW and GLAD pair, and I am suggesting it to, cos of Windows was hard to compile FreeGLUT.   
@@ -90,6 +92,8 @@ And press Generate. Copy downloaded files to your project.
 
 ### Project set-up on Linux.
 TODO
+
+---
 
 
 
