@@ -57,3 +57,23 @@ Currently build is available only for Windows(Linux is not yet configured in CMa
 TODO
 
 ## OpenGL
+Crossplatform graphic library. 
+For each platform are used FreeGLUT, GLEW or GLFW and GLAD to use OpenGL. learnopengl.com suggests to use GLFW and GLAD pair, and I am suggesting it to, cos of Windows was hard to compile FreeGLUT.   
+Lets descibed shortly each of this libraries:
+
+#### [FreeGLUT](https://en.wikipedia.org/wiki/FreeGLUT)
+Handles functionality of creating window containing OpenGL context on wide range of platforms.
+
+#### [GLEW](https://en.wikipedia.org/wiki/OpenGL_Extension_Wrangler_Library)
+It query and loads OpenGL extensions.
+
+The same functionality provides
+#### [GLFW](https://en.wikipedia.org/wiki/GLFW)
+Handles side with windows, and
+
+#### [GLAD](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library#glad_.28Multi-Language_GL.2FGLES.2FEGL.2FGLX.2FWGL_Loader-Generator.29)
+Loader of OpenGL.
+
+### Project set-up on Windows
+
+
