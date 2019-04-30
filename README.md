@@ -19,10 +19,16 @@ and some future plans:
 10. __OpenAI.__
 
 futher possible reading and research:  
-https://en.cppreference.com/w/cpp/links/libs - __especially Physics and Simulations part.__
-https://wiki.python.org/moin/UsefulModules
-https://github.com/golang/go/wiki/Projects
-OpenAI, TensorFlow,
+
+11. https://en.cppreference.com/w/cpp/links/libs - __especially Physics and Simulations part.__
+12. https://wiki.python.org/moin/UsefulModules
+13. https://github.com/golang/go/wiki/Projects
+14. OpenAI. 
+15. TensorFlow.
+
+And the last but not least:
+
+16. __Supercomputers and highly parallel computations__.
 
 ---
 ## OpenCV
