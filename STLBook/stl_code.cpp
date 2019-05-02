@@ -1,5 +1,29 @@
 ﻿#include "stl_code.h"
 
+#include <iostream>
+#include <vector>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <list>
+#include <array>
+#include <chrono>
+#include <deque>
+#include <algorithm>
+#include <iterator>
+#include <set>
+#include <cassert>
+#include <unordered_map>
+#include <stack>
+#include <sstream>
+#include <stdexcept>
+#include <cmath>
+#include <iomanip>
+#include <queue>
+#include <inttypes.h>
+#include <limits>
+
 void LOG_PRINT(string str)
 {
 	cout << endl << endl;
@@ -248,7 +272,7 @@ namespace stl_book {
 
 
 			//cool iterating over map
-			map<string, __int64> animals{
+			map<string, int64_t> animals{
 				{ "humans", 7000000000 },
 				{ "chickens", 17863376000 },
 				{ "camels", 24246291 },
@@ -490,8 +514,8 @@ namespace stl_book {
 			map<string, pair<const billionaire, size_t>> m;
 			for (const auto &b : billionaires)
 			{
-				auto[iterator, suссess] = m.try_emplace(b.country, b, 1);
-				if (!suссess)
+				auto[iterator, success] = m.try_emplace(b.country, b, 1);
+				if (!success)
 					iterator->second.second += 1;
 			}
 

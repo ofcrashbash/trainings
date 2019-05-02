@@ -1,35 +1,32 @@
 # Project definition
 cmake_minimum_required(VERSION 3.2)
-project(testgl CXX)
 
+#GLFW
+find_package(glfw3 REQUIRED)
 
-set(GLAD_DIR /usr/local/glad_debug)
-set(GLFW_DIR /usr/local/glfw_debug)
+#Source files
+set(SOURCE_FILES 
+    glfw_test.h 
+    glfw_test.cpp 
+    #GLAD
+    $ENV{GLAD_DIR}/include/glad/glad.h 
+    $ENV{GLAD_DIR}/src/glad.c)
 
-include_directories(${PROJECT_NAME}    ${GLAD_DIR}/include)
-include_directories(${PROJECT_NAME}    ${GLFW_DIR}/include)
-find_library(GLAD_LIB libglad.a HINTS  ${GLAD_DIR}/lib)
-find_library(GLFW_LIB libglfw3.a HINTS ${GLFW_DIR}/lib)
+add_library(glfw_test ${SOURCE_FILES})
 
-find_package(OpenGL REQUIRED)
-if(NOT OPENGL_FOUND)
-    message("ERROR: OpenGL not found")
-endif()
-set(GL_LIBRARY GL GLU X11)
+target_link_libraries(glfw_test  glfw ${CMAKE_DL_LIBS})
+#GLAD
+target_include_directories(glfw_test 
+    PUBLIC 
+    $ENV{GLAD_DIR}/include
+    $ENV{GLAD_DIR}/src)
 
+#shaders setup
+configure_file(frag_shader.frag ${CMAKE_CURRENT_BINARY_DIR}/frag_shader.frag COPYONLY)
+configure_file(vertex_shader.vert ${CMAKE_CURRENT_BINARY_DIR}/vertex_shader.vert COPYONLY)
 
-# Source files
-set(SOURCE_FILES Main.cpp ${GLAD_DIR}/include/glad/glad ${GLFW_DIR}/include/GLFW/glfw3)
-
-add_library(glfw_test glfw_test.h glfw_test.cpp )
-target_link_libraries(glfw_test ${GLFW_LIB} ${GLAD_LIB} ${GL_LIBRARY} m pthread ${CMAKE_DL_LIBS})
+#main program build
+set(SOURCE_FILES Main.cpp glfw_test.h)
 # Executable definition and properties
 add_executable(testgl ${SOURCE_FILES})
 target_link_libraries(testgl glfw_test)
-
-message("installing to ${BUILD_DIR}/OpenGL")
-file(COPY vertex_shader.vert
-    DESTINATION ${BUILD_DIR}/OpenGL)
-file(COPY frag_shader.frag
-    DESTINATION ${BUILD_DIR}/OpenGL)
-

@@ -1,25 +1,4 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <list>
-#include <array>
-#include <chrono>
-#include <deque>
-#include <algorithm>
-#include <iterator>
-#include <set>
-#include <cassert>
-#include <unordered_map>
-#include <stack>
-#include <sstream>
-#include <stdexcept>
-#include <cmath>
-#include <iomanip>
-#include <queue>
 
 using namespace std;
 
