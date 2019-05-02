@@ -1,3 +1,4 @@
+#ifndef __linux__
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../STLBook/stl_code.cpp"
@@ -130,3 +131,5 @@ namespace UnitTest1
 		}
 	};
 }
+
+#endif
