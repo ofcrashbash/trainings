@@ -1,21 +1,28 @@
-cmake_minimum_required(VERSION 2.6)
-project(hello)
+cmake_minimum_required(VERSION 3.0)
 
-set(hello_src main.cpp main_new.cpp)
+set(SOURCE_FILES main.cpp main_new.cpp)
 
 if(WIN32)
-    set(hello_src "${hello_src}" winsupport.cpp)
+    set(SOURCE_FILES "${SOURCE_FILES}" winsupport.cpp)
 else()
-    set(hello_src "${hello_src}" linuxsupport.cpp)
+    set(SOURCE_FILES "${SOURCE_FILES}" linuxsupport.cpp)
 endif()
 
-add_executable(hello ${hello_src})
+set(OpenGL_GL_PREFERENCE GLVND)
+find_package(OpenGL REQUIRED)
+
+if(OPENGL_FOUND)
+    message("OpenGL found")
+endif()
+
 
 find_library(GMSH_LIBRARY
 NAMES libgmsh.a
 PATHS /usr/local/gmsh/lib)
 
 if(GMSH_LIBRARY)
-    message("GMSH!")
-    target_link_libraries(hello ${GMSH_LIBRARY})
+message("GMSH!")
+target_link_libraries(hello ${GMSH_LIBRARY})
 endif()
+
+add_executable(hello ${SOURCE_FILES})
