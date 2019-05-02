@@ -61,8 +61,11 @@ _Properties of project->Debugging->Environment_ set to it next macros: Path=$(OP
 
 Thats all, now You can run programs!
 
-### Project set-up onLinux.
-Currently build is available only for Windows(Linux is not yet configured in CMake file). 
+### Project set-up on Linux.
+Just type:
+> sudo apt install libopencv-dev
+
+And thats, all.
 [Link to my OneNote notebook with more details](https://onedrive.live.com/view.aspx?resid=5B08D11D78362F2A%213880&id=documents&wd=target%28Computer%20Graphics.one%7C554D37D9-ACD6-4ED9-BB63-56C6EA66C736%2FOpenGL%7C15450641-1CD5-468E-91EE-6827900FBBBD%2F%29).
 
 ---
