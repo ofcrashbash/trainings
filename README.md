@@ -99,14 +99,15 @@ And press Generate. Copy downloaded files to your project.
 ### Project set-up on Linux.
 
 #### GLFW
-> sudo apt install libglfw3-dev
+> sudo apt install libglfw3-dev  
+
 That's all!
 
 #### GLAD
 Almost same setup as for windows.
 Download source files(only one header and one source) from [official site](https://glad.dav1d.de/). 
 gl -> Select latest version, Language -> C\C++, Specification -> OpenGL, Profile -> Core, Options -> Generate a Loader.
-And press Generate. Extract archive and setup to envirnonmental variable __GLAD_DIR__ to target folder(for example /usr/local/glad).
+And press Generate. Extract archive and setup envirnonmental variable __GLAD_DIR__ to target folder(for example /usr/local/glad).
 
 
 
