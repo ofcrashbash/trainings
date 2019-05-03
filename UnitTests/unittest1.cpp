@@ -1,5 +1,5 @@
-#ifndef __linux__
 #include "stdafx.h"
+#ifndef __linux__
 #include "CppUnitTest.h"
 #include "../STLBook/stl_code.cpp"
 #include "../Eulerproject/theEulerProject.cpp"
