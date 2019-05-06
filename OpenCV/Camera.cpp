@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
 		}
 
 		if( frame_line.empty())
-			frame_line = Mat::zeros(Size(width, height), frame_back.type());
+			frame_line = Mat::zeros(Size((int)width, (int)height), frame_back.type());
 		/*
 		Make changes to frame
 			1 - Constrast
@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
 
 		cur_frame = frame_back;
 		//Rotation matrix
-		Mat matRot = getRotationMatrix2D(Point(width / 2, height / 2), iSliderValue1, 1);
+		Mat matRot = getRotationMatrix2D(Point((int)(width / 2.), (int)(height / 2)), (double)iSliderValue1, 1.);
 		//Affine transformation
 		warpAffine(cur_frame, cur_frame, matRot, cur_frame.size(), INTER_LINEAR, 1, Scalar());
 
@@ -161,8 +161,8 @@ int main(int argc, char* argv[])
 			dArea = oMoments.m00;
 			if (dArea > 0)
 			{
-				int posY = dM01 / dArea;
-				int posX = dM10 / dArea;
+				int posY = (int) (dM01 / dArea);
+				int posX = (int) (dM10 / dArea);
 				if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0) {
 					//Draw a red line from the previous point to the current point
 					

@@ -35,3 +35,7 @@ unsignllongint square_diff(int max_num);
 
 //seventh
 unsignllongint prime(unsigned num);
+
+//eight
+///https://projecteuler.net/problem=8
+int largest_product(const string str, const int num_of_digits = 4);
