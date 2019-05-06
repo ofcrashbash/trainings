@@ -112,6 +112,18 @@ Download source files(only one header and one source) from [official site](https
 gl -> Select latest version, Language -> C\C++, Specification -> OpenGL, Profile -> Core, Options -> Generate a Loader.
 And press Generate. Extract archive and setup envirnonmental variable __GLAD_DIR__ to target folder(for example /usr/local/glad).
 
+---
+## Boost.TEST
+### Setup on windows and visual studion
+At first You should setup (VCpkg)[https://github.com/Microsoft/vcpkg] pakage manager and then
+use this (instruction)[https://docs.microsoft.com/en-us/visualstudio/test/how-to-use-boost-test-for-cpp?view=vs-2019]
+
+
+### Linux(CMake)
+
+>sudo apt install liboost-all-dev
+
+
 
 
 
