@@ -114,10 +114,22 @@ And press Generate. Extract archive and setup envirnonmental variable __GLAD_DIR
 
 ---
 ## Boost.TEST
-### Setup on windows and visual studion
+### Setup on windows and visual studion(vcpkg doesn't support visual studio yet)
 At first You should setup [VCpkg](https://github.com/Microsoft/vcpkg) pakage manager and then
 use this [instruction](https://docs.microsoft.com/en-us/visualstudio/test/how-to-use-boost-test-for-cpp?view=vs-2019)
 
+Boost.Test extension for VS has problems and [problem](https://github.com/MicrosoftDocs/visualstudio-docs/issues/3209) was reported.
+
+Another way was to setup Boost.Test as regular project, but VS Test Explorer doesn't recognize it.  
+Details of this setup:
+* Boost from [SourceForge](https://sourceforge.net/projects/boost/files/latest/download) or build from repo.
+* Setup _Boost_DIR_ environmental variable.
+* Create _reference_ to project which generates __library__.
+* Build.
+
+### Installing Boost on Windows
+Download and install [Boost binnaries](https://sourceforge.net/projects/boost/files/boost-binaries).
+Next specify to them Boost_DIR environmetal variable.
 
 ### Linux(CMake)
 
