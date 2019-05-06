@@ -115,8 +115,8 @@ And press Generate. Extract archive and setup envirnonmental variable __GLAD_DIR
 ---
 ## Boost.TEST
 ### Setup on windows and visual studion
-At first You should setup (VCpkg)[https://github.com/Microsoft/vcpkg] pakage manager and then
-use this (instruction)[https://docs.microsoft.com/en-us/visualstudio/test/how-to-use-boost-test-for-cpp?view=vs-2019]
+At first You should setup [VCpkg](https://github.com/Microsoft/vcpkg) pakage manager and then
+use this [instruction](https://docs.microsoft.com/en-us/visualstudio/test/how-to-use-boost-test-for-cpp?view=vs-2019)
 
 
 ### Linux(CMake)
