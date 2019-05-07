@@ -136,11 +136,19 @@ Next specify to them Boost_DIR environmetal variable.
 >sudo apt install liboost-all-dev
 
 
-
-
-
-
 ---
+
+## Box2D
+
+### Windowds(Visual Studio)
+* Setup Box2D using [instruction](https://github.com/erincatto/Box2D/blob/master/Building.md).
+* Separate build files by _include_, _lib_ and _bin_(optionaly) directories.
+* Setup environmental variable BOX2D_DIR.
+* Done.
+
+### Linux(Cmake)
+
+TODO add CMake to project and describe setup process
 
 
 
