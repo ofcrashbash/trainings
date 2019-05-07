@@ -135,7 +135,8 @@ Use of __Vcpkg package manager__ is the simplest way in this case.
 
 ### Linux(CMake)
 
->sudo apt install liboost-all-dev
+>sudo apt install liboost-all-dev   
+
 TODO implement CTest in CMake file..
 
 
