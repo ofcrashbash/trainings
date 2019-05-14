@@ -168,3 +168,162 @@ void class_static_members()
 	cout << "Static a[6];" << endl;
 	Static a[6];
 }
+
+
+
+// cosnt member function: trick is such that only 
+// const memberes can be accesed by const object
+
+class ConstClass
+{
+	public:
+		void foo()
+		{
+			cout << "non-const member" << endl;
+		}
+
+		void foo() const
+		{
+			cout << "const member" << endl;
+		}
+};
+
+void const_class_test()
+{
+	ConstClass la; 
+	const ConstClass ka;
+
+	la.foo();
+	ka.foo();
+}
+
+
+
+
+//class templates
+template<class T>
+class TemplateTest
+{
+	T val;
+public:
+	TemplateTest(T init_val) : val{ init_val } {};
+};
+
+//template specialization
+template<>
+class TemplateTest<char>
+{
+	char val;
+};
+
+
+void template_test()
+{
+	TemplateTest<unsigned int> la = { 1 };
+	TemplateTest ra{ 1 };
+}
+
+
+//special members
+template <class T = int>
+class Special
+{
+	T val;
+
+public:
+	//Default constructor
+	Special() {}
+
+	//constructor
+	Special(T init_val) : val{ init_val }
+	{
+		cout << val << endl;
+		cout << "Contructor" << endl;
+	}
+
+	//desctructor
+	~Special()
+	{
+		cout << val << endl;
+		cout << "Destructor" << endl;
+	}
+
+	//Copy constructor
+	Special(const Special& sp)
+	{
+		val = sp.val;
+		cout << val << endl;
+		cout << "Copy Contructor" << endl;
+	}
+
+	//Copy Asignement constructor
+	Special& operator=(const Special& a)
+	{
+		cout << val << endl;
+		cout << "Copy Asignment" << endl;
+		val = a.val;
+
+		return *this;
+	}
+
+	//move constructor
+	Special(Special&& a)
+	{
+		cout << val << endl;
+		cout << "Move Contructor" << endl;
+		val = a.val;
+	}
+
+	//move asignment
+	Special& operator=(Special&& a)
+	{
+		cout << val << endl;
+		cout << "Move Asignemt" << endl;
+		val = a.val;
+		return *this;
+	}
+
+};
+
+class SpecialDefault
+{
+public:
+	SpecialDefault() = default;
+	~SpecialDefault() = default;
+	SpecialDefault(SpecialDefault& sd) = default;
+	SpecialDefault(SpecialDefault&& sd) = delete;
+	SpecialDefault& operator=(const SpecialDefault& sd) = delete;
+	SpecialDefault& operator=(SpecialDefault&& sd) = delete;
+};
+
+Special<string> foo()
+{
+	return Special<string>{ "foo" };
+}
+
+//moves corresponds to operations with rvalues
+//Return Value Optimization. - rvalue - return value
+void special_members_test()
+{
+	Special<string> la("la"), ka("ka");//constructor
+	Special<string> ga(ka)/*copy cosntructor*/; 
+	Special<string> ra = foo();//move constructor
+	Special<string> pa;
+
+	ka = la;//copy assignemnt
+	ra = Special<string>{};//move assignment
+	pa = foo();// move assignment
+
+
+	//also all those special members are generated automaticaly if 
+	//they are not specified.
+
+	SpecialDefault a, b, c;
+	SpecialDefault d(a);
+	//a = b; can't be specified cos asignment constructor is deleted
+
+	//In general, and for future compatibility, classes that explicitly 
+	//define one copy / move constructor or one copy / move assignment 
+	//but not both, are encouraged to specify either delete or default 
+	//on the other special member functions they don't explicitly define.
+}

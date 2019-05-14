@@ -61,3 +61,9 @@ class Static
 
 
 void class_static_members();
+
+void const_class_test();
+
+void template_test();
+
+void special_members_test();
