@@ -7,7 +7,7 @@ void simple_except()
 {
 	try
 	{
-		throw 20;
+		throw 20; 
 		throw 'c';
 	}
 	catch (int e)
@@ -17,6 +17,6 @@ void simple_except()
 	catch (char e)
 	{
 		cout << "Char Exception" << endl;
-		
+		throw;//will rethrow same error
 	}
 }
