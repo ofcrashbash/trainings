@@ -288,7 +288,7 @@ bool is_multile_of_brute(int max_div, unsignllongint value)
 
 unsignllongint smallest_multiple_brute(int max_div)
 {
-	unsignllongint max_multiple = 1, next_multiple;
+	unsignllongint max_multiple = 1, next_multiple = 0;
 	for (int i = 1; i < max_div; ++i)
 		max_multiple *= i;
 
@@ -349,19 +349,19 @@ unsignllongint prime(unsigned num)
 
 //Task 8
 //Largest product in series
-int largest_product(const string str, const int num_of_digits)
+unsignllongint largest_product(const string str, const int num_of_digits)
 {
-	string part_str;
-	int max_prod = 0;
-	for (unsigned i = 0; i < str.length() - num_of_digits; ++i)
+	unsignllongint max_prod = 0;
+	for (unsigned i = 0; i <= str.length() - num_of_digits; ++i)
 	{	
 		//getting num_of_digits sub string
-		part_str = str.substr(i, num_of_digits);
+		auto part_str = str.substr(i, num_of_digits);
 		
 		//calculation of product of those digits
-		int cur_prod = 1;
-		for (auto digit : part_str)
+		unsignllongint cur_prod = 1;
+		for (auto digit : part_str) 
 			cur_prod *= atoi(&digit);
+
 
 		//updating max value if it is bigger
 		if (cur_prod > max_prod)
