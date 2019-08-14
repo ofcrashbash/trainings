@@ -16,7 +16,7 @@ void simple_except()
 	}
 	catch (char e)
 	{
-		cout << "Char Exception" << endl;
+		cout << "Char Exception:" << e << endl;
 		throw;//will rethrow same error
 	}
 }
