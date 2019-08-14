@@ -42,3 +42,8 @@ unsignllongint largest_product(const string str, const int num_of_digits = 4);
 
 //pithagorian product
 unsignllongint product_of_pithagorian_numbers();
+
+//tenth task
+unsignllongint sum_of_prime(unsigned top_limit);
+bool is_prime(unsignllongint number);
+unsignllongint fast_sum_of_prime(unsigned top_limit);
