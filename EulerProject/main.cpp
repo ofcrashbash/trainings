@@ -9,6 +9,8 @@ int main(int argc, char ** argv)
 	cout << "The Eulear Project" << endl;
 	cout << "##################" << endl;
 	
+	cout << "Task #10 Total of prime numbers" << endl;
+	cout << "bellow limit 2 000 000 is " << fast_sum_of_prime(2000000) << endl;
 	
 	cout << "Task #9 Pithagorian product" << endl;
 	cout << product_of_pithagorian_numbers();

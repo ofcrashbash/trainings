@@ -385,3 +385,66 @@ unsignllongint product_of_pithagorian_numbers()
 
 	return product;
 }
+
+
+//Task 10
+//Sum of primes
+unsignllongint sum_of_prime(unsigned top_limit)//very slow
+{
+	unsignllongint total = 0;
+	unsignllongint cur_prime = 2;
+	unsigned counter = 1;
+
+	while (cur_prime < top_limit) {
+		total += cur_prime;
+		cur_prime = prime(++counter);
+	};
+
+	return total;
+}
+
+
+bool is_prime(unsignllongint number)
+{
+	if (number <= 1)
+		return false;
+	else if (number < 4)
+		return true;
+	else if (number % 2 == 0)
+		return false;
+	else if (number < 9)
+		return true;
+	else if (number % 3 == 0)
+		return false;
+	else
+	{
+		unsignllongint r = (unsignllongint)floor(sqrt(number)),
+			f = 5;
+		while (f <= r)
+		{
+			if (number % f == 0)
+				return false;
+			else if (number % (f + 2) == 0)
+				return false;
+			f += 6;
+		}
+	}
+	return true;
+}
+
+unsignllongint fast_sum_of_prime(unsigned top_limit)//fast
+{
+	unsignllongint total = 0,
+		number = 3;
+
+	if (top_limit >= 2)
+		total = 2;
+
+	while (number < top_limit) {
+		if(is_prime(number))
+			total += number;
+		number += 2;
+	};
+
+	return total;
+}

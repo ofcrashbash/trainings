@@ -145,9 +145,20 @@ namespace TestCasesOfSandBox
 			Assert::AreEqual(product_of_pithagorian_numbers(), (unsignllongint)31875000);
 		}
 
-		TEST_METHOD(task_10_total_of_primes)
+		TEST_METHOD(task_10_sum_of_primes)
 		{
-			Assert::AreEqual(sum_of_prime(10), 17);
+			Assert::AreEqual(sum_of_prime(10), (unsignllongint)17);
+			Assert::AreEqual(fast_sum_of_prime(10), (unsignllongint)17);
+		}
+
+		TEST_METHOD(task_10_sum_of_primes_is_prime)
+		{
+			Assert::IsTrue(is_prime(2));
+			Assert::IsTrue(is_prime(3));
+			Assert::IsTrue(is_prime(5));
+			Assert::IsTrue(is_prime(13));
+			Assert::IsTrue(is_prime(541));
+			Assert::IsFalse(is_prime(27));
 		}
 	};
 }
