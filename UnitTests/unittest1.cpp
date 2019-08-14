@@ -139,6 +139,11 @@ namespace TestCasesOfSandBox
 			str = "1122";
 			Assert::AreEqual(largest_product(str, 4), (unsignllongint)4);
 		}
+
+		TEST_METHOD(task_9_pithagorian_product)
+		{
+			Assert::AreEqual(product_of_pithagorian_numbers(), (unsignllongint)31875000);
+		}
 	};
 }
 

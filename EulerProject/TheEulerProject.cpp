@@ -369,3 +369,19 @@ unsignllongint largest_product(const string str, const int num_of_digits)
 	}
 	return max_prod;
 }
+
+//Task 9
+//Pithagorian numbers
+unsignllongint product_of_pithagorian_numbers()
+{
+	unsignllongint 
+		product = 0,
+		total = 1000;
+
+	for (unsignllongint a = 1; a < 500; ++a)
+		for (unsignllongint b = a + 1; b < 500; ++b)
+			if (pow(a, 2) + pow(b, 2) == pow(1000 - a - b, 2))
+				product = a * b * (1000 - a - b);
+
+	return product;
+}
