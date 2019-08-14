@@ -39,3 +39,6 @@ unsignllongint prime(unsigned num);
 //eight
 ///https://projecteuler.net/problem=8
 unsignllongint largest_product(const string str, const int num_of_digits = 4);
+
+//pithagorian product
+unsignllongint product_of_pithagorian_numbers();
