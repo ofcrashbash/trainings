@@ -2,7 +2,6 @@
 var myHeading = document.querySelector('h1');
 myHeading.textContent = 'Привітульки!';
 
-
 //Showing allert on start
 var iceCream = 'chocolate';
 if (iceCream === 'chocolate') {
@@ -10,6 +9,7 @@ if (iceCream === 'chocolate') {
 } else {
     alert('Awwww, but chocolate is my favorite...');
 }
+
 
 //Event when pressing body
 document.querySelector('h1').onclick =
