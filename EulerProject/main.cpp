@@ -6,7 +6,7 @@ int main(int argc, char ** argv)
 {
 
 	cout << "##################" << endl;
-	cout << "The Eulear Project" << endl;
+	cout << "The Eulear Project" << endl;  
 	cout << "##################" << endl;
 	
 	cout << "Task #10 Total of prime numbers" << endl;
