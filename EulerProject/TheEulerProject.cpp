@@ -1,4 +1,5 @@
 #include "theEulerProject.h"
+#include <sstream> 
 
 
 int multipliers_of_5_and_3(int max)
@@ -447,4 +448,90 @@ unsignllongint fast_sum_of_prime(unsigned top_limit)//fast
 	};
 
 	return total;
+}
+
+
+//Task 11
+
+//get matrix element
+int get_m_e(int num_arr[20 * 20], int i, int j)
+{
+	return num_arr[20 * i + j];
+}
+
+//Maxim product of four adjacent elements in matrix.
+long  int max_line_product_in_matrix(string num_matrix)
+{
+	long int max_product = 1;
+	//convert string into matrix
+	int num_arr[20 * 20];
+	stringstream ssin{ num_matrix };
+	int i = 0;
+	while (!ssin.eof())
+	{
+		ssin >> num_arr[i];
+		++i;
+	}
+	//iterate over all posibilities
+	for( int i = 0; i < 20; ++i)
+		for( int j = 0; j < 20; ++j)
+		{
+			//first diagonal
+			if (i < 20 - 4 && j < 20 - 4)
+			{
+				long first_diag = 1;
+				for (int k = 0; k < 4; ++k)
+				{
+					auto el = get_m_e(num_arr, i + k, j + k);
+					first_diag *= el;
+				}
+				//get maximal product
+				if (first_diag > max_product)
+					max_product = first_diag;
+			}
+
+			//second diagonal
+			if (i >= 3 && j >= 3)
+			{
+				long second_diag = 1;
+				for (int k = 0; k < 4; ++k)
+				{
+					auto el = get_m_e(num_arr, i - k, j + k);
+					second_diag *= el;
+				}
+				//get maximal product
+				if (second_diag > max_product)
+					max_product = second_diag;
+			}
+
+			//vertical diagonal
+			if (i < 20 - 4)
+			{
+				long vertical = 1;
+				for (int k = 0; k < 4; ++k)
+				{
+					auto el = get_m_e(num_arr, i + k, j);
+					vertical *= el;
+				}
+				//get maximal product
+				if (vertical > max_product)
+					max_product = vertical;
+			}
+
+			//horizontal diagonal
+			if (j < 20 - 4)
+			{
+				long horizontal = 1;
+				for (int k = 0; k < 4; ++k)
+				{
+					auto el = get_m_e(num_arr, i, j + k);
+					horizontal *= el;
+				}
+				//get maximal product
+				if (horizontal > max_product)
+					max_product = horizontal;
+			}
+		}
+
+	return max_product;
 }
