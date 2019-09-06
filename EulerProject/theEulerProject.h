@@ -47,3 +47,6 @@ unsignllongint product_of_pithagorian_numbers();
 unsignllongint sum_of_prime(unsigned top_limit);
 bool is_prime(unsignllongint number);
 unsignllongint fast_sum_of_prime(unsigned top_limit);
+
+//eleventh task
+long int max_line_product_in_matrix(string num_matrix);
