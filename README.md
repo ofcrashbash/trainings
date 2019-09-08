@@ -4,31 +4,50 @@ Trainings with new tools, techiques, features etc.
 
 ## Contetns:
 
+0. __Building and Running__
+    + Vcpkg
+    + Visual Studio
+    + Linux
+    + Cmake
 1. __The Euler project tasks.__
-2. __OpenCV__
-3. __OpenGL__
-4. __C++/STL/Boost__
-5. __CMake__
-6. __Unit Testing. TDD. Boost.Test. Google Test.__
-7. __Python.__   
+1. __OpenCV__
+1. __OpenGL__
+1. __C++/STL/Boost__
+1. __CMake__
+1. __Unit Testing. TDD. Boost.Test. Google Test.__
+1. __Python.__   
 
 and some future plans:
 
 8. __CUDA/TBB(Intel Threading Building Blocks), OpenMPI, multithreading programming.__
-9. __GoLang.__
-10. __OpenAI.__
+8. __GoLang.__
+8. __OpenAI.__
 
 futher possible reading and research:  
 
 11. https://en.cppreference.com/w/cpp/links/libs - __especially Physics and Simulations part.__
-12. https://wiki.python.org/moin/UsefulModules
-13. https://github.com/golang/go/wiki/Projects
-14. OpenAI. 
-15. TensorFlow.
+11. https://wiki.python.org/moin/UsefulModules
+11. https://github.com/golang/go/wiki/Projects
+11. OpenAI. 
+11. TensorFlow.
 
 And the last but not least:
 
 16. __Supercomputers and highly parallel computations__.
+
+---
+## Building and Running
+Project is mostly developed on Windows machine, but still it is quite interesting to try different build techinques on different machines. So called crossplatform application. At first project was developed in Visual Studio. To add support from Linux I have added 
+CMake support. But CMake require packages and to get those packages on Windows or/and Linux is done in very different way. Linux gives very easy tool apt-get(or app - package manager) which resolves any dependencies very quickly. Windows is less straightforward to Linux. You can customly build libraries from source, or download chocolately, but recently there is great tool - __vcpkg__! Next section is about it.
+
+### VCPKG
+Some key notes: 
+  - Only cmake-gui works well with the package manager.
+  - You have manually add new entry value _VCPKG_DEFAULT_TRIPLET_(or _VCPKG_TARGET_TRIPLET_) to specify build target(x86-windows, x64-windows-static etc).
+  - You have to specify Toolchain File.
+  - There is some problems with specifing _VCPKG_DEFAULT_TRIPLET_
+ 
+some usefull links: [How to Use vcpkg With CMake On Windows](https://developerpaul123.github.io/c++/cmake/using-vcpkg-on-windows/), [official repo](https://github.com/microsoft/vcpkg)
 
 ---
 ## OpenCV
@@ -150,8 +169,11 @@ TODO implement CTest in CMake file..
 * Setup environmental variable BOX2D_DIR.
 * Done.
 
-### Linux(Cmake)
+### vcpkg
+> vcpkg install box2d:x64-windows
 
+### Linux(Cmake)
+also vcpkg manager can be used
 TODO add CMake to project and describe setup process
 
 
