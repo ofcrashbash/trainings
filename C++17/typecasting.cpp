@@ -89,7 +89,9 @@ void typeid_test()
 		cout << "base isn't equal to deriverd" << endl;
 
 	cout << typeid(Base).name() << endl;
-	cout << typeid(Base).raw_name() << endl;
+	#ifndef __linux__
+		cout << typeid(Base).raw_name() << endl;
+	#endif
 	try{
 		Base* a = new Base;
 		Base* b = new Derived;

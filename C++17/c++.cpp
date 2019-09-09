@@ -184,12 +184,13 @@ void memory_allocation()
 	*b = 1;
 	delete[] b;
 
-	//
-	auto c = new (nothrow) int[LONG_MAX];
-	delete[] c;
-
-	auto d = new int[LONG_MAX];
-	delete[] d;
+	#ifndef __linux__
+		auto c = new (nothrow) int[LONG_MAX];
+		delete[] c;
+	
+		auto d = new int[LONG_MAX];
+		delete[] d;
+	#endif
 
 }
 
