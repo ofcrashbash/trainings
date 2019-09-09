@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #ifndef __linux__
 #include "CppUnitTest.h"
-#include "../STLBook/stl_code.cpp"
 #include "../Eulerproject/theEulerProject.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

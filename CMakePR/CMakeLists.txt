@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(SOURCE_FILES main.cpp main_new.cpp)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(SOURCE_FILES main.cpp)
 
 if(WIN32)
     set(SOURCE_FILES "${SOURCE_FILES}" winsupport.cpp)
@@ -21,8 +24,8 @@ NAMES libgmsh.a
 PATHS /usr/local/gmsh/lib)
 
 if(GMSH_LIBRARY)
-message("GMSH!")
-target_link_libraries(hello ${GMSH_LIBRARY})
+    message("GMSH!")    
+    target_link_libraries(hello ${GMSH_LIBRARY})
 endif()
 
 add_executable(hello ${SOURCE_FILES})

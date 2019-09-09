@@ -70,9 +70,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <SourcePath>$(SourcePath)</SourcePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;</LibraryPath>
+    <SourcePath>$(SourcePath);$(GLAD_DIR)\src</SourcePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(GLFW_DIR)\include;$(GLAD_DIR)\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(GLFW_DIR)\lib-vc2019</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <SourcePath>$(SourcePath);$(GLAD_DIR)\src</SourcePath>
