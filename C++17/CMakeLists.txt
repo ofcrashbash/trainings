@@ -12,8 +12,8 @@ add_library(cpp STATIC
     c++.h)
 
 add_library(exceptions STATIC
-    exceptions.cpp 
-    exceptions.h)
+    Exceptions.cpp 
+    Exceptions.h)
 
 add_library(friendshipandinheritance STATIC
     friendshipandinheritance.cpp 
