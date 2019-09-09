@@ -87,6 +87,10 @@ Just type:
 And thats, all.
 [Link to my OneNote notebook with more details](https://onedrive.live.com/view.aspx?resid=5B08D11D78362F2A%213880&id=documents&wd=target%28Computer%20Graphics.one%7C554D37D9-ACD6-4ED9-BB63-56C6EA66C736%2FOpenGL%7C15450641-1CD5-468E-91EE-6827900FBBBD%2F%29).
 
+### VCPKG and CMake
+
+`vcpkg install opencv`
+
 ---
 ## OpenGL
 Crossplatform graphic library. 
@@ -131,6 +135,11 @@ Download source files(only one header and one source) from [official site](https
 gl -> Select latest version, Language -> C\C++, Specification -> OpenGL, Profile -> Core, Options -> Generate a Loader.
 And press Generate. Extract archive and setup envirnonmental variable __GLAD_DIR__ to target folder(for example /usr/local/glad).
 
+### VCPKG and CMake
+
+`vcpkg install glfw3`
+`vcpkg install glad`
+
 ---
 ## Boost.TEST
 ### Setup on windows and visual studion(vcpkg doesn't support visual studio yet)
@@ -170,7 +179,7 @@ TODO implement CTest in CMake file..
 * Done.
 
 ### vcpkg
-> vcpkg install box2d:x64-windows
+`vcpkg install box2d:x64-windows`
 
 ### Linux(Cmake)
 also vcpkg manager can be used
