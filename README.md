@@ -91,6 +91,11 @@ And thats, all.
 
 `vcpkg install opencv`
 
+#### Cuda support
+Install [nvidia CUDA toolkit](https://developer.nvidia.com/cuda-downloads)
+`vcpkg install opencv[cuda]`
+
+
 ---
 ## OpenGL
 Crossplatform graphic library. 
