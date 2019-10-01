@@ -11,12 +11,12 @@ namespace FabricMethod
 
 		struct ConcreteProductA : Product
 		{
-			void doStuff();
+			void doStuff() override;
 		};
 
 		struct ConcreteProductB : Product
 		{
-			void doStuff();
+			void doStuff() override;
 		};
 
 		struct Creator
@@ -27,12 +27,12 @@ namespace FabricMethod
 
 		struct ConcreteCreatorA : Creator
 		{
-			Product* createProduct();
+			Product* createProduct() override;
 		};
 		
 		struct ConcreteCreatorB : Creator
 		{
-			Product* createProduct();
+			Product* createProduct() override;
 		};
 
 		void ExampleOfUse();
@@ -50,12 +50,12 @@ namespace FabricMethod
 
 		struct WindwosButton : Button
 		{
-			void render();
+			void render() override;
 		};
 
 		struct WebButton : Button
 		{
-			void render();
+			void render() override;
 		};
 
 		struct Dialog
@@ -67,12 +67,12 @@ namespace FabricMethod
 
 		struct WindowsDialog : Dialog
 		{
-			Button* renderButton();
+			Button* renderButton() override;
 		};
 
 		struct WebDialog : Dialog
 		{
-			Button* renderButton();
+			Button* renderButton() override;
 		};
 
 		void ExampleOfUse();
