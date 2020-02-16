@@ -58,7 +58,7 @@ Triangulation<2> hyper_shell()
 {
     Triangulation<2> triangulation;
     GridGenerator::hyper_shell(triangulation, Point<2>(0, 0), 0.1, 1, 6, true);
-    triangulation.refine_global(3);
+    triangulation.refine_global();
 
     for(auto& cell: triangulation.active_cell_iterators())
     {
@@ -95,6 +95,8 @@ ostream& operator<<(ostream &out, const DoFHandler<dim>& dof_handler)
     cout << "DoF Handler info" << endl;
     cout << "number of dofs: " << dof_handler.n_dofs() << endl;
     cout << "number of boundary dofs: " << dof_handler.n_boundary_dofs() << endl;
+    cout << "max dofs per cell: " << DoFTools::max_dofs_per_cell(dof_handler) << endl;
+    cout << "max connections: " << dof_handler.max_couplings_between_dofs() << endl;
     return out;
 } 
 
@@ -110,8 +112,68 @@ SparsityPattern generate_sparsity_pattern(DoFHandler<2> &dof_handler)
     return sparsity_pattern;
 }
 
+enum renumberings {
+    none,
+    cuthill_McKee, 
+    block_wise,
+    clockwise_dg,
+    hierarchical,
+    random_renumbering,
+    subdomain_wise
+};
+
+template <int dim = 2>
+void distribute_dofs(
+    Triangulation<dim> & triangulation, 
+    renumberings renumbering_type = none, 
+    int fe_degree = 1, 
+    string file_name = "sparsity_pattern.svg")
+{
+    const FE_Q<2> finite_element(fe_degree);
+    DoFHandler<2> dof_handler(triangulation);
+    dof_handler.distribute_dofs(finite_element);
+    cout << dof_handler;
+
+    switch(renumbering_type)
+    {
+        case none:
+            break;
+        case cuthill_McKee:
+            DoFRenumbering::Cuthill_McKee(dof_handler);
+            break;
+        case block_wise:
+            DoFRenumbering::block_wise(dof_handler);
+            break;
+        case clockwise_dg:
+            DoFRenumbering::clockwise_dg(dof_handler, Point<2>(0, 0));
+            break;
+        case hierarchical:
+            DoFRenumbering::hierarchical(dof_handler);
+            break;
+        case random_renumbering:
+            DoFRenumbering::random(dof_handler);
+            break;
+        case subdomain_wise:
+            DoFRenumbering::subdomain_wise(dof_handler);
+            break;
+    }
+
+    auto sparsity_pattern = generate_sparsity_pattern(dof_handler);
+    dof_handler.clear();
+        
+    ofstream out(file_name);
+    sparsity_pattern.print_svg(out);
+    out.close();
+}
+
 int main(int argc, char** argv)
 {
+
+    renumberings renumbering_type = none;
+    if(argc > 1)
+    {
+        renumbering_type = (renumberings)(argv[1][0] - '0');
+    }
     //Mesh generation
     auto tria_cube_split = hyper_cube_slit();
     save(tria_cube_split, "hyper_cube_slit");
@@ -130,48 +192,9 @@ int main(int argc, char** argv)
     cout << tria_cube;
 
     //Sparsity patterns and distribution of dofs
-    const FE_Q<2> finite_element(1);
-    DoFHandler<2> dof_handler(tria_shell);
-    dof_handler.distribute_dofs(finite_element);
-    ofstream out("sparsity_pattern.svg");
-    {
-        auto sparsity_pattern = generate_sparsity_pattern(dof_handler);
-
-        cout << dof_handler;
-        dof_handler.clear();
-        
-        sparsity_pattern.print_svg(out);
-        out.close();
-    }
-
-    //reordered sparsity pattern
-    dof_handler.initialize(tria_shell, finite_element);
-    dof_handler.distribute_dofs(finite_element);
-    DoFRenumbering::Cuthill_McKee(dof_handler);
-    {
-        auto sparsity_pattern = generate_sparsity_pattern(dof_handler);
-
-        cout << dof_handler;
-        dof_handler.clear();
-        out.open("sparsity_pattern_renumbered.svg");
-        sparsity_pattern.print_svg(out);
-        out.close();
-    }
-
-    //double reordered sparsity pattern
-    dof_handler.initialize(tria_shell, finite_element);
-    dof_handler.distribute_dofs(finite_element);
-    DoFRenumbering::Cuthill_McKee(dof_handler);
-    DoFRenumbering::Cuthill_McKee(dof_handler);
-    {
-        auto sparsity_pattern = generate_sparsity_pattern(dof_handler);
-
-        cout << dof_handler;
-        dof_handler.clear();
-        out.open("sparsity_pattern_double_renumbered.svg");
-        sparsity_pattern.print_svg(out);
-        out.close();
-    }
+    distribute_dofs(tria_shell, renumbering_type, 1, "sparsity_pattern_1.svg");
+    distribute_dofs(tria_shell, renumbering_type, 2, "sparsity_pattern_2.svg");
+    distribute_dofs(tria_shell, renumbering_type, 3, "sparsity_pattern_3.svg");
     //TODO: experiment with other renumbering types
     return 0;
 }
