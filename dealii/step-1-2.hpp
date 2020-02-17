@@ -1,3 +1,5 @@
+#pragma once
+
 #include <deal.II/grid/tria.h>
 #include <deal.II/grid/tria_accessor.h>
 #include <deal.II/grid/tria_iterator.h>
@@ -19,59 +21,18 @@
 #include <fstream>
 #include <cmath>
 
-using namespace std;
 using namespace dealii;
+using namespace std;
 
-void save(Triangulation<2> &triangulation, string name)
-{
-    std::ofstream out(name + ".svg");
-    GridOut grid_out;
-    grid_out.write_svg(triangulation, out);
-    cout << "grid written to \"" + name + ".svg\"" << endl;
-}
+void save(Triangulation<2> &triangulation, string name);
 
-Triangulation<2> hyper_cube_grid(unsigned n_ref = 0)
-{
-    Triangulation<2> triangulation;
-    GridGenerator::hyper_cube(triangulation);
-    triangulation.refine_global(n_ref);
-    return triangulation;
-}
+Triangulation<2> hyper_cube_grid(unsigned n_ref = 0);
 
-Triangulation<2> hyper_cube_slit()
-{
-    Triangulation<2> triangulation;
-    GridGenerator::hyper_cube_slit(triangulation, 0, 1, false);
-    triangulation.refine_global(4);
-    return triangulation;
-}
+Triangulation<2> hyper_cube_slit();
 
-Triangulation<2> half_hyper_ball()
-{
-    Triangulation<2> triangulation;
-    GridGenerator::half_hyper_ball(triangulation, Point<2>(0, 0), 1.0);
-    triangulation.refine_global(4);
-    return triangulation;
-}
+Triangulation<2> half_hyper_ball();
 
-Triangulation<2> hyper_shell()
-{
-    Triangulation<2> triangulation;
-    GridGenerator::hyper_shell(triangulation, Point<2>(0, 0), 0.1, 1, 6, true);
-    triangulation.refine_global();
-
-    for(auto& cell: triangulation.active_cell_iterators())
-    {
-        auto dist = (cell->center()).distance(Point<2>(0, 0));
-        auto threshold = ((double) rand() / (RAND_MAX));
-        if(dist > threshold)
-        {
-            cell->set_refine_flag();
-        }
-    }
-    triangulation.execute_coarsening_and_refinement();
-    return triangulation;
-}
+Triangulation<2> hyper_shell();
 
 template <int dim = 2>
 ostream& operator<<(ostream &out, const Triangulation<dim>& triangulation)
@@ -95,24 +56,14 @@ ostream& operator<<(ostream &out, const DoFHandler<dim>& dof_handler)
     cout << "DoF Handler info" << endl;
     cout << "number of dofs: " << dof_handler.n_dofs() << endl;
     cout << "number of boundary dofs: " << dof_handler.n_boundary_dofs() << endl;
-    cout << "max dofs per cell: " << DoFTools::max_dofs_per_cell(dof_handler) << endl;
     cout << "max connections: " << dof_handler.max_couplings_between_dofs() << endl;
     return out;
 } 
 
+SparsityPattern generate_sparsity_pattern(DoFHandler<2> &dof_handler);
 
-SparsityPattern generate_sparsity_pattern(DoFHandler<2> &dof_handler)
-{    
-    DynamicSparsityPattern dynamic_sparsity_pattern(dof_handler.n_dofs(), dof_handler.n_dofs());
-    DoFTools::make_sparsity_pattern(dof_handler, dynamic_sparsity_pattern);
-
-    SparsityPattern sparsity_pattern;
-    sparsity_pattern.copy_from(dynamic_sparsity_pattern);
-
-    return sparsity_pattern;
-}
-
-enum renumberings {
+enum renumberings 
+{
     none,
     cuthill_McKee, 
     block_wise,
@@ -129,8 +80,8 @@ void distribute_dofs(
     int fe_degree = 1, 
     string file_name = "sparsity_pattern.svg")
 {
-    const FE_Q<2> finite_element(fe_degree);
-    DoFHandler<2> dof_handler(triangulation);
+    const FE_Q<dim> finite_element(fe_degree);
+    DoFHandler<dim> dof_handler(triangulation);
     dof_handler.distribute_dofs(finite_element);
     cout << dof_handler;
 
@@ -164,37 +115,4 @@ void distribute_dofs(
     ofstream out(file_name);
     sparsity_pattern.print_svg(out);
     out.close();
-}
-
-int main(int argc, char** argv)
-{
-
-    renumberings renumbering_type = none;
-    if(argc > 1)
-    {
-        renumbering_type = (renumberings)(argv[1][0] - '0');
-    }
-    //Mesh generation
-    auto tria_cube_split = hyper_cube_slit();
-    save(tria_cube_split, "hyper_cube_slit");
-    cout << tria_cube_split;
-
-    auto tria_half_ball = half_hyper_ball();
-    save(tria_half_ball, "half_hyper_ball");
-    cout << tria_half_ball;
-
-    auto tria_shell = hyper_shell();
-    save(tria_shell, "hyper_shell");
-    cout << tria_shell;
-    
-    auto tria_cube = hyper_cube_grid(2);
-    save(tria_cube, "hyper_cube_grid");
-    cout << tria_cube;
-
-    //Sparsity patterns and distribution of dofs
-    distribute_dofs(tria_shell, renumbering_type, 1, "sparsity_pattern_1.svg");
-    distribute_dofs(tria_shell, renumbering_type, 2, "sparsity_pattern_2.svg");
-    distribute_dofs(tria_shell, renumbering_type, 3, "sparsity_pattern_3.svg");
-    //TODO: experiment with other renumbering types
-    return 0;
 }

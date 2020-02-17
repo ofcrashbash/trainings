@@ -10,5 +10,13 @@ find_package(deal.II 9.1.0 REQUIRED
     )
 deal_ii_initialize_cached_variables()
 
-add_executable(main steps.cpp)
+add_executable(main main.cpp)
+
+add_library(step12 step-1-2.hpp step-1-2.cpp)
+deal_ii_setup_target(step12)
+
+add_library(step3 step-3.hpp step-3.cpp)
+deal_ii_setup_target(step3)
+
+target_link_libraries(main step12 step3)
 deal_ii_setup_target(main)
