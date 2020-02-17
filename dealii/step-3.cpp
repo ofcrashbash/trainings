@@ -25,6 +25,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace dealii;
 
 LaplaceEquationSolver::LaplaceEquationSolver():
     fe(1),
@@ -35,7 +36,7 @@ LaplaceEquationSolver::LaplaceEquationSolver():
 
 void LaplaceEquationSolver::make_grid()
 {
-    GridGenerator::hyper_cube<2>(triangulation, -1, 1, true);
+    GridGenerator::hyper_cube<2>(triangulation, -1, 1);
     triangulation.refine_global(2);
 
     cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
