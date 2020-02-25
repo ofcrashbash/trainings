@@ -1,4 +1,4 @@
-#include "step-1-2.hpp"
+#include "step-1.hpp"
 
 void grid_generator(Triangulation<1, 1>& triangulation, string grid_type)
 {
@@ -316,16 +316,4 @@ Triangulation<2> hyper_shell()
     }
     triangulation.execute_coarsening_and_refinement();
     return triangulation;
-}
-
-
-SparsityPattern generate_sparsity_pattern(DoFHandler<2> &dof_handler)
-{    
-    DynamicSparsityPattern dynamic_sparsity_pattern(dof_handler.n_dofs(), dof_handler.n_dofs());
-    DoFTools::make_sparsity_pattern(dof_handler, dynamic_sparsity_pattern);
-
-    SparsityPattern sparsity_pattern;
-    sparsity_pattern.copy_from(dynamic_sparsity_pattern);
-
-    return sparsity_pattern;
 }
