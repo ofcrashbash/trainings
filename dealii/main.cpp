@@ -1,18 +1,16 @@
-#include "step-1-2.hpp"
+#include "step-1.hpp"
+#include "step-2.hpp"
 #include "step-3.hpp"
 
 #include <iostream>
 #include <map>
 #include <string>
 
-#include <deal.II/grid/tria.h>
-
 using namespace dealii;
 using namespace std;
 
 int main(int argc, char** argv)
 {
-
     renumberings renumbering_type = none;
     string grid_type = "none";
     if(argc == 2)
@@ -49,7 +47,6 @@ int main(int argc, char** argv)
         "moebius"
     };
 
-    cout << "1d" << endl;
     Triangulation<1> tria_1d;
     for(auto grid_type_name: grids_types_array)
     {
@@ -64,7 +61,6 @@ int main(int argc, char** argv)
         }
     }
 
-    cout << "1d in 2d" << endl;
     Triangulation<1, 2> tria_1d_in_2d;
     for(auto grid_type_name: grids_types_array)
     {
@@ -78,7 +74,6 @@ int main(int argc, char** argv)
         }
     }
 
-    cout << "2d" << endl;
     Triangulation<2> tria_2d;
     for(auto grid_type_name: grids_types_array)
     {
@@ -92,7 +87,6 @@ int main(int argc, char** argv)
         }
     }
 
-    cout << "2d in 3d" << endl;
     Triangulation<2, 3> tria_2d_in_3d;
     for(auto grid_type_name: grids_types_array)
     {
@@ -106,7 +100,6 @@ int main(int argc, char** argv)
         }
     }
 
-    cout << "3d" << endl;
     Triangulation<3> tria_3d;
     for(auto grid_type_name: grids_types_array)
     {
@@ -123,33 +116,20 @@ int main(int argc, char** argv)
     //step - 2
 
     //Mesh generation
-    auto tria_cube_split = hyper_cube_slit();
-    save(tria_cube_split, "hyper_cube_slit");
-    cout << tria_cube_split;
-
-    auto tria_half_ball = half_hyper_ball();
-    save(tria_half_ball, "half_hyper_ball");
-    cout << tria_half_ball;
-
-    auto tria_shell = hyper_shell();
+    Triangulation<2> tria_shell;
+    grid_generator(tria_shell, "hyper_shell");
     save(tria_shell, "hyper_shell");
     cout << tria_shell;
-    
-    auto tria_cube = hyper_cube_grid(2);
-    save(tria_cube, "hyper_cube_grid");
-    cout << tria_cube;
 
     //Sparsity patterns and distribution of dofs
     distribute_dofs(tria_shell, renumbering_type, 1, "sparsity_pattern_1.svg");
     distribute_dofs(tria_shell, renumbering_type, 2, "sparsity_pattern_2.svg");
     distribute_dofs(tria_shell, renumbering_type, 3, "sparsity_pattern_3.svg");
 
-
     //step - 3
     LaplaceEquationSolver a;
     a.run();
 
-    //how about 1d mesh?
     //solve laplace on all these meshesh.
     //how to set different boundary id?
     
