@@ -24,7 +24,31 @@
 using namespace dealii;
 using namespace std;
 
-void save(Triangulation<2> &triangulation, string name);
+struct MyException : public std::exception
+{
+   std::string s;
+   MyException(std::string ss) : s(ss) {}
+   ~MyException() throw () {} // Updated
+   const char* what() const throw() { return s.c_str(); }
+};
+
+void grid_generator(Triangulation<1>& triangulation, string grid_type);
+void grid_generator(Triangulation<1, 2>& triangulation, string grid_type);
+void grid_generator(Triangulation<2>& triangulation, string grid_type);
+void grid_generator(Triangulation<2, 3>& triangulation, string grid_type);
+void grid_generator(Triangulation<3>& triangulation, string grid_type);
+
+template <int dim = 2, int spacedim = 2>
+void save(Triangulation<dim, spacedim> &triangulation, string name)
+{
+    GridOut grid_out;
+
+    ofstream out(name + ".vtk");
+    grid_out.write_vtk(triangulation, out);
+    out.close();
+    
+    cout << "grid written to \"" + name + ".vtk\"" << endl;
+}
 
 Triangulation<2> hyper_cube_grid(unsigned n_ref = 0);
 
