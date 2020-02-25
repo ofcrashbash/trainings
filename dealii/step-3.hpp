@@ -16,10 +16,10 @@ class LaplaceEquationSolver
 {
     public:
         LaplaceEquationSolver();
-        void run();
+        void run(unsigned mesh_id = 0);
 
     private:
-        void make_grid();
+        void make_grid(unsigned mesh_id = 0);
         void setup_system();
         void assemble_system();
         void solve();

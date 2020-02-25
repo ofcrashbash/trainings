@@ -23,6 +23,7 @@
 #include <deal.II/numerics/data_out.h>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 using namespace dealii;
@@ -31,12 +32,38 @@ LaplaceEquationSolver::LaplaceEquationSolver():
     fe(1),
     dof_handler(triangulation)
 {
-
+    deallog.depth_console(2);
 }
 
-void LaplaceEquationSolver::make_grid()
+void LaplaceEquationSolver::make_grid(unsigned mesh_id)
 {
-    GridGenerator::hyper_cube<2>(triangulation, -1, 1);
+    switch(mesh_id)
+    {
+        case 0:
+            GridGenerator::hyper_cube<2>(triangulation, -1, 1);
+            break;
+        case 1:
+            GridGenerator::hyper_cube_slit(triangulation, 0, 1, false);
+            break;
+        case 2:
+            GridGenerator::half_hyper_ball(triangulation, Point<2>(0, 0), 1.0);
+            break;
+        case 3: 
+            GridGenerator::hyper_shell(triangulation, Point<2>(0, 0), 0.1, 1, 6, true);
+            break;
+        case 4:
+            {
+                vector<Point<2>> vertices{Point<2>(-1, 0), Point<2>(1, 0), Point<2>(0, 1)};
+                GridGenerator::simplex(triangulation,  vertices);
+            }
+            break;
+        case 5:
+            GridGenerator::hyper_cube_with_cylindrical_hole(triangulation);
+            break;
+        default:
+            throw "non mesh type specified";
+
+    }
     triangulation.refine_global(2);
 
     cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
@@ -46,6 +73,7 @@ void LaplaceEquationSolver::setup_system()
 {
     //degree of freeedom
     dof_handler.distribute_dofs(fe);
+    cout << "Number of degree of freedom: " << dof_handler.n_dofs() << endl;
 
     DynamicSparsityPattern dynamic_sparsity_pattern(dof_handler.n_dofs(), dof_handler.n_dofs());
     DoFTools::make_sparsity_pattern(dof_handler, dynamic_sparsity_pattern);
@@ -131,7 +159,7 @@ void LaplaceEquationSolver::assemble_system()
 
 void LaplaceEquationSolver::solve()
 {
-    SolverControl solver_control(1000, 1e-12);
+    SolverControl solver_control(1000, 1e-30);
     SolverCG<Vector<double>> solver(solver_control);
     
     solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
@@ -149,9 +177,9 @@ void LaplaceEquationSolver::output_results() const
     data_out.write_vtk(output);
 }
 
-void LaplaceEquationSolver::run()
+void LaplaceEquationSolver::run(unsigned mesh_id)
 {
-    make_grid();
+    make_grid(mesh_id);
     setup_system();
     assemble_system();
     solve();
