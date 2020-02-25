@@ -118,7 +118,7 @@ int main(int argc, char** argv)
     //Mesh generation
     Triangulation<2> tria_shell;
     grid_generator(tria_shell, "hyper_shell");
-    save(tria_shell, "hyper_shell");
+    save(tria_shell, "hyper_shell_2d");
     cout << tria_shell;
 
     //Sparsity patterns and distribution of dofs

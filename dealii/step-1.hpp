@@ -38,7 +38,7 @@ void grid_generator(Triangulation<2>& triangulation, string grid_type);
 void grid_generator(Triangulation<2, 3>& triangulation, string grid_type);
 void grid_generator(Triangulation<3>& triangulation, string grid_type);
 
-template <int dim = 2, int spacedim = 2>
+template <int dim = 2, int spacedim = dim>
 void save(Triangulation<dim, spacedim> &triangulation, string name)
 {
     GridOut grid_out;
