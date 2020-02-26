@@ -18,10 +18,10 @@ enum renumberings
 {
     none,
     cuthill_McKee, 
-    block_wise,
-    clockwise_dg,
     hierarchical,
     random_renumbering,
+    block_wise,
+    clockwise_dg,
     subdomain_wise
 };
 
@@ -84,3 +84,5 @@ ostream& operator<<(ostream &out, const DoFHandler<dim>& dof_handler)
     cout << "max connections: " << dof_handler.max_couplings_between_dofs() << endl;
     return out;
 }
+
+void step_2_main();

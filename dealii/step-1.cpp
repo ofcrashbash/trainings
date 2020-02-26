@@ -1,5 +1,7 @@
 #include "step-1.hpp"
 
+#include <vector>
+
 void grid_generator(Triangulation<1, 1>& triangulation, string grid_type)
 {
     auto grid_type_map = map<string, unsigned>
@@ -322,4 +324,101 @@ Triangulation<2> hyper_shell()
     }
     triangulation.execute_coarsening_and_refinement();
     return triangulation;
+}
+
+vector<string> grids_types_array()
+{
+    return vector<string>{
+        "hyper_cube_slit",
+        "half_hyper_ball",
+        "hyper_shell",
+        "hyper_cube",
+        "subdivided_hyper_cube",
+        "simplex",
+        "cheese",
+        "plate_with_a_hole",
+        "parallelogram",
+        "parallelepiped",
+        "enclosed_hyper_cube",
+        "hyper_ball",
+        "hyper_sphere",
+        "quarter_hyper_ball",
+        "cylinder",
+        "truncated_cone",
+        "hyper_cross",
+        "hyper_L",
+        "cylinder_shell",
+        "hyper_cube_with_cylindrical_hole",
+        "concentric_hyper_shells",
+        "moebius"
+    };
+}
+
+void step_1_main()
+{
+    Triangulation<1> tria_1d;
+    for(auto grid_type_name: grids_types_array())
+    {
+        tria_1d.clear();
+        try
+        {
+            grid_generator(tria_1d, grid_type_name);
+            save(tria_1d, grid_type_name + "_1d");
+        } catch(const MyException& caught)
+        {
+            cout<<"Got :\" " << caught.what() << "\"" <<endl;
+        }
+    }
+
+    Triangulation<1, 2> tria_1d_in_2d;
+    for(auto grid_type_name: grids_types_array())
+    {
+        tria_1d_in_2d.clear();
+        try
+        {
+            grid_generator(tria_1d_in_2d, grid_type_name);
+            save(tria_1d_in_2d, grid_type_name + "_1d_in_2d");
+        } catch(const MyException& caught){
+            cout<<"Got :\" " << caught.what() << "\"" <<endl;
+        }
+    }
+
+    Triangulation<2> tria_2d;
+    for(auto grid_type_name: grids_types_array())
+    {
+        tria_2d.clear();
+        try
+        {
+            grid_generator(tria_2d, grid_type_name);
+            save(tria_2d, grid_type_name + "_2d");
+        } catch(const MyException& caught){
+            cout<<"Got :\" " << caught.what() << "\"" <<endl;
+        }
+    }
+
+    Triangulation<2, 3> tria_2d_in_3d;
+    for(auto grid_type_name: grids_types_array())
+    {
+        tria_2d_in_3d.clear();
+        try
+        {
+            grid_generator(tria_2d_in_3d, grid_type_name);
+            save(tria_2d_in_3d, grid_type_name + "_2d_in_3d");
+        } catch(const MyException& caught){
+            cout<<"Got :\" " << caught.what() << "\"" <<endl;
+        }
+    }
+
+    Triangulation<3> tria_3d;
+    for(auto grid_type_name: grids_types_array())
+    {
+        tria_3d.clear();
+        try
+        {
+            grid_generator(tria_3d, grid_type_name);
+            save(tria_3d, grid_type_name + "_3d");
+        } catch(const MyException& caught){
+            cout<<"Got :\" " << caught.what() << "\"" <<endl;
+        }
+    }
 }

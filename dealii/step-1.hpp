@@ -15,6 +15,8 @@
 using namespace dealii;
 using namespace std;
 
+vector<string> grids_types_array();
+
 extern const PolarManifold<2, 2> g_polar_manifold;
 extern const SphericalManifold<2, 2> g_manifold2d;//NOTE work around
 extern TransfiniteInterpolationManifold<2, 2> g_inner_manifold;
@@ -68,3 +70,5 @@ ostream& operator<<(ostream &out, const Triangulation<dim>& triangulation)
 
     return out;
 }
+
+void step_1_main();
