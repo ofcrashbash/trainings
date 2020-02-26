@@ -76,7 +76,7 @@ class LaplaceEquationSolver
 
         void assemble_system()
         {   
-            QGauss<2> quadrature_formula(fe.degree + 1);
+            QGauss<dim> quadrature_formula(fe.degree + 1);
             FEValues<dim, spacedim> fe_values(fe, quadrature_formula, update_values | update_gradients | update_JxW_values);
 
             const unsigned dofs_per_cell = fe.dofs_per_cell;
@@ -151,7 +151,7 @@ class LaplaceEquationSolver
 
         void output_results(string file_name = "solution") const
         {
-            DataOut<2> data_out;
+            DataOut<dim> data_out;
 
             data_out.attach_dof_handler(dof_handler);
             data_out.add_data_vector(solution, file_name);
