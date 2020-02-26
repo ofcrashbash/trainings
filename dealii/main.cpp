@@ -2,12 +2,7 @@
 #include "step-2.hpp"
 #include "step-3.hpp"
 
-#include <iostream>
 #include <map>
-#include <string>
-
-using namespace dealii;
-using namespace std;
 
 int main(int argc, char** argv)
 {
@@ -54,8 +49,9 @@ int main(int argc, char** argv)
         try
         {
             grid_generator(tria_1d, grid_type_name);
+            tria_1d.refine_global(3);
             save(tria_1d, grid_type_name + "_1d");
-        } catch(MyException& caught)
+        } catch(const MyException& caught)
         {
             cout<<"Got :\" " << caught.what() << "\"" <<endl;
         }
@@ -68,8 +64,9 @@ int main(int argc, char** argv)
         try
         {
             grid_generator(tria_1d_in_2d, grid_type_name);
-            //save(tria_1d_in_2d, grid_type_name + "_1d_in_2d");
-        } catch(MyException& caught){
+            tria_1d_in_2d.refine_global(3);
+            save(tria_1d_in_2d, grid_type_name + "_1d_in_2d");
+        } catch(const MyException& caught){
             cout<<"Got :\" " << caught.what() << "\"" <<endl;
         }
     }
@@ -81,8 +78,9 @@ int main(int argc, char** argv)
         try
         {
             grid_generator(tria_2d, grid_type_name);
+            tria_2d.refine_global(3);
             save(tria_2d, grid_type_name + "_2d");
-        } catch(MyException& caught){
+        } catch(const MyException& caught){
             cout<<"Got :\" " << caught.what() << "\"" <<endl;
         }
     }
@@ -94,8 +92,9 @@ int main(int argc, char** argv)
         try
         {
             grid_generator(tria_2d_in_3d, grid_type_name);
+            tria_2d_in_3d.refine_global(3);
             save(tria_2d_in_3d, grid_type_name + "_2d_in_3d");
-        } catch(MyException& caught){
+        } catch(const MyException& caught){
             cout<<"Got :\" " << caught.what() << "\"" <<endl;
         }
     }
@@ -107,8 +106,9 @@ int main(int argc, char** argv)
         try
         {
             grid_generator(tria_3d, grid_type_name);
+            tria_3d.refine_global(3);
             save(tria_3d, grid_type_name + "_3d");
-        } catch(MyException& caught){
+        } catch(const MyException& caught){
             cout<<"Got :\" " << caught.what() << "\"" <<endl;
         }
     }
@@ -127,8 +127,22 @@ int main(int argc, char** argv)
     distribute_dofs(tria_shell, renumbering_type, 3, "sparsity_pattern_3.svg");
 
     //step - 3
-    LaplaceEquationSolver a;
-    a.run();
+    for(int renumbering_type = (int)none; renumbering_type <= (int)subdomain_wise; ++renumbering_type)
+        for(auto grid_type_name: grids_types_array)
+        {
+            try
+            {
+                cout << "grid type: "<< grid_type_name << " renumbering type: " << (renumberings)renumbering_type << endl;
+
+                LaplaceEquationSolver<2, 2> a;
+                a.run(grid_type_name, (renumberings)renumbering_type, 
+                    "sol_ren_type_" + to_string(renumbering_type) + "_mesh_type_" + grid_type_name);
+            }
+            catch(const MyException& caught)
+            {
+                cout<<"Got :\" " << caught.what() << "\"" <<endl;
+            }
+        }
 
     //solve laplace on all these meshesh.
     //how to set different boundary id?

@@ -44,6 +44,10 @@ void grid_generator(Triangulation<1, 2>& triangulation, string grid_type)
         throw MyException("unknown grid type: " + grid_type);
 }
 
+const PolarManifold<2, 2> g_polar_manifold;
+const SphericalManifold<2, 2> g_manifold2d;//NOTE work around
+TransfiniteInterpolationManifold<2, 2> g_inner_manifold;
+
 void grid_generator(Triangulation<2, 2>& triangulation, string grid_type)
 {
     auto grid_type_map = map<string, unsigned>
@@ -59,15 +63,11 @@ void grid_generator(Triangulation<2, 2>& triangulation, string grid_type)
         {"parallelogram", 8},
         {"enclosed_hyper_cube", 10},
         {"hyper_ball", 11},
-        {"hyper_sphere", 12},
         {"quarter_hyper_ball", 13},
         {"truncated_cone", 15},
         {"hyper_cross", 16},
         {"hyper_L", 17},
-        {"cylinder_shell", 18},
         {"hyper_cube_with_cylindrical_hole", 19},
-        {"concentric_hyper_shells", 20},
-        {"moebius", 21}
     };
 
     if (grid_type_map.count(grid_type))
@@ -110,7 +110,15 @@ void grid_generator(Triangulation<2, 2>& triangulation, string grid_type)
                 GridGenerator::enclosed_hyper_cube(triangulation, 0, 1, 0.1);
                 break;
             case 11:
-                GridGenerator::hyper_ball(triangulation, Point<triangulation.dimension>(), 1, true);
+                {
+                    GridGenerator::hyper_ball(triangulation, Point<triangulation.dimension>());
+                    
+                    triangulation.set_all_manifold_ids(1);
+                    triangulation.set_all_manifold_ids_on_boundary(0);
+                    triangulation.set_manifold(0, g_polar_manifold);
+                    g_inner_manifold.initialize(triangulation);
+                    triangulation.set_manifold(1, g_inner_manifold);
+                }
                 break;
             case 13:
                 GridGenerator::quarter_hyper_ball(triangulation);
@@ -130,11 +138,9 @@ void grid_generator(Triangulation<2, 2>& triangulation, string grid_type)
             case 19:
                 GridGenerator::hyper_cube_with_cylindrical_hole(triangulation);
                 break;
-            case 20:
-                GridGenerator::concentric_hyper_shells(triangulation, Point<triangulation.dimension>());
-                break;
-            default:
-                throw MyException("unknown grid type: " + grid_type);
+            //case 20: pointer error
+            //    GridGenerator::concentric_hyper_shells(triangulation, Point<triangulation.dimension>());
+            //    break;
         }
     else 
         throw MyException("unknown grid type: " + grid_type);

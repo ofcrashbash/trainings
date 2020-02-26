@@ -7,27 +7,22 @@
 #include <deal.II/grid/grid_out.h>
 #include <deal.II/grid/manifold_lib.h>
 
-#include <deal.II/dofs/dof_handler.h>
-#include <deal.II/dofs/dof_tools.h>
-#include <deal.II/dofs/dof_renumbering.h>
-
-#include <deal.II/fe/fe_q.h>
-#include <deal.II/fe/fe_dgq.h>
-
-#include <deal.II/lac/sparse_matrix.h>
-#include <deal.II/lac/dynamic_sparsity_pattern.h>
-
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <string>
 
 using namespace dealii;
 using namespace std;
 
+extern const PolarManifold<2, 2> g_polar_manifold;
+extern const SphericalManifold<2, 2> g_manifold2d;//NOTE work around
+extern TransfiniteInterpolationManifold<2, 2> g_inner_manifold;
+
 struct MyException : public std::exception
 {
-   std::string s;
-   MyException(std::string ss) : s(ss) {}
+   string s;
+   MyException(string ss) : s(ss) {}
    ~MyException() throw () {} // Updated
    const char* what() const throw() { return s.c_str(); }
 };
@@ -71,15 +66,5 @@ ostream& operator<<(ostream &out, const Triangulation<dim>& triangulation)
     out << "n_global_levels: " << triangulation.n_global_levels() << endl;
     out << "n_levels: " << triangulation.n_levels() << endl;
 
-    return out;
-}
-
-template <int dim = 2>
-ostream& operator<<(ostream &out, const DoFHandler<dim>& dof_handler)
-{
-    cout << "DoF Handler info" << endl;
-    cout << "number of dofs: " << dof_handler.n_dofs() << endl;
-    cout << "number of boundary dofs: " << dof_handler.n_boundary_dofs() << endl;
-    cout << "max connections: " << dof_handler.max_couplings_between_dofs() << endl;
     return out;
 }
