@@ -11,7 +11,10 @@
 #include <deal.II/numerics/matrix_tools.h>
 #include <deal.II/numerics/vector_tools.h>
 #include <deal.II/numerics/data_out.h>
+
 #include <deal.II/base/function.h>
+#include <deal.II/base/function_bessel.h>
+#include <deal.II/base/function_lib.h>
 
 #include <deal.II/lac/vector.h>
 #include <deal.II/lac/full_matrix.h>
@@ -19,6 +22,7 @@
 #include <deal.II/lac/precondition.h>
 
 #include <vector>
+#include <map>
 
 //TODO make some inheritance between LaplaceEquationSolver and TrivialFunctionSolver classes
 
@@ -77,8 +81,8 @@ class LaplaceEquationSolver
 
         void assemble_system()
         {   
-            QGauss<dim> quadrature_formula(fe.degree + 1);
-            FEValues<dim, spacedim> fe_values(fe, quadrature_formula, update_values | update_gradients | update_JxW_values);
+            QGauss< dim > quadrature_formula(fe.degree + 1);
+            FEValues< dim, spacedim > fe_values(fe, quadrature_formula, update_values | update_gradients | update_JxW_values);
 
             const unsigned dofs_per_cell = fe.dofs_per_cell;
             const unsigned n_q_points = quadrature_formula.size();
@@ -127,7 +131,7 @@ class LaplaceEquationSolver
                 }
             }
 
-            map<types::global_dof_index, double> boundary_values;
+            map< types::global_dof_index, double > boundary_values;
 
             VectorTools::interpolate_boundary_values(
                 dof_handler, 
@@ -145,14 +149,14 @@ class LaplaceEquationSolver
         void solve()
         {
             SolverControl solver_control(1000, 1e-30);
-            SolverCG<Vector<double>> solver(solver_control);
+            SolverCG< Vector < double > > solver(solver_control);
 
             solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
         }
 
         void output_results(string file_name = "solution") const
         {
-            DataOut<dim> data_out;
+            DataOut< dim > data_out;
 
             data_out.attach_dof_handler(dof_handler);
             data_out.add_data_vector(solution, file_name);
@@ -163,15 +167,14 @@ class LaplaceEquationSolver
         }
 
         Triangulation<dim, spacedim> triangulation;
-        FE_Q<dim,spacedim> fe;
-        DoFHandler<dim, spacedim> dof_handler;
+        FE_Q< dim, spacedim > fe;
+        DoFHandler< dim, spacedim > dof_handler;
         
         SparsityPattern sparsity_pattern;
-        SparseMatrix<double> system_matrix;
-        Vector<double> solution;
-        Vector<double> system_rhs;
+        SparseMatrix< double > system_matrix;
+        Vector< double > solution;
+        Vector< double > system_rhs;
 };
-
 
 
 template <int dim = 2, int spacedim = dim>
@@ -186,11 +189,37 @@ class TrivialFunctionSolver
             deallog.depth_console(2);
         };
 
-        void run(string grid_type_name, renumberings renumbering_type, string file_name = "solution")
+        void run(string grid_type_name = "hyper_cube", renumberings renumbering_type = none, int function_num = 0,  string file_name = "solution")
         {
             make_grid(grid_type_name);
             setup_system(renumbering_type, file_name);
-            assemble_system();
+
+            dealii::Function< dim > * func = NULL;
+            switch(function_num)
+            {
+                case 0:
+                    func = new Functions::ZeroFunction< dim >();
+                    break;
+                case 1:
+                    func = new Functions::ConstantFunction< dim >(10);
+                    break;
+                case 2:
+                    func = new Functions::Bessel1< dim >(1, 1);
+                    break;
+                case 3:
+                    func = new Functions::SquareFunction< dim >();
+                    break;
+                case 4:
+                    func = new Functions::CosineFunction< dim >();
+                    break;
+                case 5:
+                    func = new Functions::ExpFunction< dim >();
+                    break;
+                default: 
+                    throw MyException("unknown function type: " + function_num);
+            }
+
+            assemble_system(func);
             solve();
             output_results(file_name);
         }
@@ -200,7 +229,7 @@ class TrivialFunctionSolver
         void make_grid(string grid_type_name)
         {
             grid_generator(triangulation, grid_type_name);
-            triangulation.refine_global(2);
+            triangulation.refine_global(5);
             cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
         }
 
@@ -210,7 +239,7 @@ class TrivialFunctionSolver
             dof_handler.distribute_dofs(fe);
             cout << "Number of degree of freedom: " << dof_handler.n_dofs() << endl;
 
-            renumber<dim, spacedim>(dof_handler, renumbering_type);
+            renumber< dim, spacedim >(dof_handler, renumbering_type);
 
             DynamicSparsityPattern dynamic_sparsity_pattern(dof_handler.n_dofs(), dof_handler.n_dofs());
             DoFTools::make_sparsity_pattern(dof_handler, dynamic_sparsity_pattern);
@@ -227,23 +256,23 @@ class TrivialFunctionSolver
             system_rhs.reinit(dof_handler.n_dofs());
         }
 
-        void assemble_system()
+        void assemble_system(dealii::Function< dim > *function)
         {   
-            QGauss<dim> quadrature_formula(fe.degree + 1);
-            FEValues<dim, spacedim> fe_values(fe, quadrature_formula, update_values | update_gradients | update_JxW_values);
+            QGauss< dim > quadrature_formula(fe.degree + 1);
+            FEValues< dim, spacedim > fe_values(fe, quadrature_formula, 
+                update_values | update_gradients | update_JxW_values | update_quadrature_points);
 
             const unsigned dofs_per_cell = fe.dofs_per_cell;
             const unsigned n_q_points = quadrature_formula.size();
 
             vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
 
-            FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
-            Vector<double> cell_rhs(dofs_per_cell);
+            FullMatrix< double > cell_matrix(dofs_per_cell, dofs_per_cell);
+            Vector< double > cell_rhs(dofs_per_cell);
 
             for(const auto& cell: dof_handler.active_cell_iterators())
             {
                 fe_values.reinit(cell);
-
                 cell_matrix = 0;
                 cell_rhs = 0;
 
@@ -253,14 +282,14 @@ class TrivialFunctionSolver
                     {
                         for(unsigned j = 0; j < dofs_per_cell; ++j)
                         {
-                            cell_matrix(i, i) += 
+                            cell_matrix(i, j) += 
                                 fe_values.shape_value(i, q_index) *
                                 fe_values.shape_value(j, q_index) *
                                 fe_values.JxW(q_index);
                         }
 
                         cell_rhs(i) += fe_values.shape_value(i, q_index) *
-                            1 *
+                            function->value(fe_values.quadrature_point(i)) *
                             fe_values.JxW(q_index);
                     }
                 }
@@ -278,33 +307,19 @@ class TrivialFunctionSolver
                     system_rhs(local_dof_indices[i]) += cell_rhs(i);
                 }
             }
-
-            //map<types::global_dof_index, double> boundary_values;
-
-            //VectorTools::interpolate_boundary_values(
-            //    dof_handler, 
-            //    0, 
-            //    Functions::ZeroFunction<2>(),
-            //    boundary_values);
-
-            //MatrixTools::apply_boundary_values(
-            //    boundary_values, 
-            //    system_matrix,
-            //    solution,
-            //    system_rhs);
         }
 
         void solve()
         {
             SolverControl solver_control(1000, 1e-30);
-            SolverCG<Vector<double>> solver(solver_control);
+            SolverCG< Vector< double > > solver(solver_control);
 
             solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
         }
 
         void output_results(string file_name = "solution") const
         {
-            DataOut<dim> data_out;
+            DataOut< dim > data_out;
 
             data_out.attach_dof_handler(dof_handler);
             data_out.add_data_vector(solution, file_name);
@@ -314,14 +329,14 @@ class TrivialFunctionSolver
             data_out.write_vtk(output);
         }
 
-        Triangulation<dim, spacedim> triangulation;
-        FE_Q<dim,spacedim> fe;
-        DoFHandler<dim, spacedim> dof_handler;
+        Triangulation< dim, spacedim > triangulation;
+        FE_Q< dim, spacedim > fe;
+        DoFHandler< dim, spacedim > dof_handler;
         
         SparsityPattern sparsity_pattern;
-        SparseMatrix<double> system_matrix;
-        Vector<double> solution;
-        Vector<double> system_rhs;
+        SparseMatrix< double > system_matrix;
+        Vector< double > solution;
+        Vector< double > system_rhs;
 };
 
 void step_3_main();
