@@ -19,13 +19,14 @@ void step_3_main()
             }
         }
 
-    try
-    {
-        TrivialFunctionSolver<2, 2> a;
-        a.run("hyper_cube", none, "trivial_function_solution");
-    }
-    catch(const MyException& caught)
-    {
-        cout<<"Got :\" " << caught.what() << "\"" <<endl;
-    }
+    for(int func_num = 0; func_num <= 5; ++func_num)
+        try
+        {
+            TrivialFunctionSolver<2, 2> a;
+            a.run("hyper_cube", none, func_num, "trivial_function_solution" + to_string(func_num) );
+        }
+        catch(const MyException& caught)
+        {
+            cout<<"Got :\" " << caught.what() << "\"" <<endl;
+        }
 }
