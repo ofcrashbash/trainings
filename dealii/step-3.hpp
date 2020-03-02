@@ -8,6 +8,8 @@
 
 #include <deal.II/base/quadrature_lib.h>
 
+#include <deal.II/base/logstream.h>
+
 #include <deal.II/numerics/matrix_tools.h>
 #include <deal.II/numerics/vector_tools.h>
 #include <deal.II/numerics/data_out.h>
@@ -25,6 +27,43 @@
 #include <map>
 
 //TODO make some inheritance between LaplaceEquationSolver and TrivialFunctionSolver classes
+
+template <int dim>
+class RightHandSide: public Function<dim>
+{
+    public:
+        RightHandSide(): Function<dim>(){}
+
+        virtual double value(const Point<dim> & p, const unsigned component = 0) const override
+        {
+            double return_value = 0;
+            for(unsigned i = 0; i < dim; ++i)
+                return_value += 4*pow(p(i), 4);
+
+            return return_value;
+        }
+};
+
+template <int dim>
+double coeff(const Point< dim > & p)
+{
+    if (p.distance(Point< dim >()) < 0.5)
+        return 10.;
+    else 
+        return 0.1;
+}
+
+template <int dim>
+class BoundaryValues: public Function<dim>
+{
+    public:
+        BoundaryValues(): Function<dim>(){}
+
+        virtual double value(const Point<dim> & p, const unsigned /*component*/) const override
+        {
+            return 0;
+        }
+};
 
 template <int dim = 2, int spacedim = dim>
 class LaplaceEquationSolver
@@ -46,6 +85,16 @@ class LaplaceEquationSolver
             solve();
             output_results(file_name);
         }
+
+        double value(Point<dim> p = Point<dim>())
+        {
+            return VectorTools::point_value (dof_handler, solution, p);
+        }
+
+        double mean()
+        {
+            return VectorTools::compute_mean_value (dof_handler, QGauss<dim>(fe.degree + 1), solution, 0);
+        }
     
     private:
 
@@ -54,6 +103,7 @@ class LaplaceEquationSolver
             grid_generator(triangulation, grid_type_name);
             triangulation.refine_global(2);
             cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
+            cout << "Total number of cells: " << triangulation.n_cells() << endl;
         }
 
         void setup_system(renumberings renumbering_type = none, string file_name = "solution")
@@ -81,8 +131,11 @@ class LaplaceEquationSolver
 
         void assemble_system()
         {   
+            RightHandSide< dim > right_hand_side;
+
             QGauss< dim > quadrature_formula(fe.degree + 1);
-            FEValues< dim, spacedim > fe_values(fe, quadrature_formula, update_values | update_gradients | update_JxW_values);
+            FEValues< dim, spacedim > fe_values(fe, quadrature_formula, 
+                update_values | update_gradients | update_JxW_values | update_quadrature_points);
 
             const unsigned dofs_per_cell = fe.dofs_per_cell;
             const unsigned n_q_points = quadrature_formula.size();
@@ -101,18 +154,21 @@ class LaplaceEquationSolver
 
                 for(unsigned q_index = 0; q_index < n_q_points; ++q_index)
                 {
+                    const auto x_q = fe_values.quadrature_point(q_index);
+
                     for(unsigned i = 0; i < dofs_per_cell; ++i)
                     {
                         for(unsigned j = 0; j < dofs_per_cell; ++j)
                         {
                             cell_matrix(i, j) += 
+                                coeff(x_q) *
                                 fe_values.shape_grad(i, q_index) *
                                 fe_values.shape_grad(j, q_index) *
                                 fe_values.JxW(q_index);
                         }
 
                         cell_rhs(i) += fe_values.shape_value(i, q_index) *
-                            1 *
+                            right_hand_side.value(x_q) *
                             fe_values.JxW(q_index);
                     }
                 }
@@ -136,7 +192,12 @@ class LaplaceEquationSolver
             VectorTools::interpolate_boundary_values(
                 dof_handler, 
                 0, 
-                Functions::ZeroFunction<2>(),
+                BoundaryValues< dim >(),
+                boundary_values);
+
+            VectorTools::interpolate_boundary_values (dof_handler,
+                1,
+                Functions::CosineFunction< dim >(),
                 boundary_values);
 
             MatrixTools::apply_boundary_values(
@@ -148,10 +209,16 @@ class LaplaceEquationSolver
 
         void solve()
         {
-            SolverControl solver_control(1000, 1e-30);
+            SolverControl solver_control(1000, 1e-15);
             SolverCG< Vector < double > > solver(solver_control);
 
-            solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
+            PreconditionSSOR<> preconditioner;
+            preconditioner.initialize(system_matrix, 1.2);
+
+            solver.solve(system_matrix, solution, system_rhs, preconditioner);
+
+            cout << "   " << solver_control.last_step()
+                << " CG iterations needed to obtain convergence." << endl;
         }
 
         void output_results(string file_name = "solution") const

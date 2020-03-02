@@ -6,12 +6,9 @@
 
 int main(void)
 {
-    step_1_main();
-    step_2_main();
+    step_1_main();//WTF why when I comment out this, error with std11 occur
+    //step_2_main();
     step_3_main();
-
-    //solve laplace on all these meshesh.
-    //how to set different boundary id?
     
     return 0;
 }

@@ -14,6 +14,7 @@ void grid_generator(Triangulation<1, 1>& triangulation, string grid_type)
         {
             case 0:
                 GridGenerator::hyper_cube(triangulation);
+                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
         }
     else 
@@ -34,6 +35,7 @@ void grid_generator(Triangulation<1, 2>& triangulation, string grid_type)
         {
             case 3:
                 GridGenerator::hyper_cube(triangulation);
+                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -86,6 +88,7 @@ void grid_generator(Triangulation<2, 2>& triangulation, string grid_type)
                 break;
             case 3:
                 GridGenerator::hyper_cube(triangulation);
+                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -164,6 +167,7 @@ void grid_generator(Triangulation<2, 3>& triangulation, string grid_type)
         {
             case 3:
                 GridGenerator::hyper_cube(triangulation);
+                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -222,6 +226,7 @@ void grid_generator(Triangulation<3, 3>& triangulation, string grid_type)
                 break;
             case 3:
                 GridGenerator::hyper_cube(triangulation);
+                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -280,50 +285,6 @@ void grid_generator(Triangulation<3, 3>& triangulation, string grid_type)
         }
     else
         throw MyException("unknown grid type: " + grid_type);
-}
-
-
-Triangulation<2> hyper_cube_grid(unsigned n_ref)
-{
-    Triangulation<2> triangulation;
-    GridGenerator::hyper_cube(triangulation);
-    triangulation.refine_global(n_ref);
-    return triangulation;
-}
-
-Triangulation<2> hyper_cube_slit()
-{
-    Triangulation<2> triangulation;
-    GridGenerator::hyper_cube_slit(triangulation, 0, 1, false);
-    triangulation.refine_global(4);
-    return triangulation;
-}
-
-Triangulation<2> half_hyper_ball()
-{
-    Triangulation<2> triangulation;
-    GridGenerator::half_hyper_ball(triangulation, Point<2>(0, 0), 1.0);
-    triangulation.refine_global(4);
-    return triangulation;
-}
-
-Triangulation<2> hyper_shell()
-{
-    Triangulation<2> triangulation;
-    GridGenerator::hyper_shell(triangulation, Point<2>(0, 0), 0.1, 1, 6, true);
-    triangulation.refine_global();
-
-    for(auto& cell: triangulation.active_cell_iterators())
-    {
-        auto dist = (cell->center()).distance(Point<2>(0, 0));
-        auto threshold = ((double) rand() / (RAND_MAX));
-        if(dist > threshold)
-        {
-            cell->set_refine_flag();
-        }
-    }
-    triangulation.execute_coarsening_and_refinement();
-    return triangulation;
 }
 
 vector<string> grids_types_array()
@@ -416,6 +377,7 @@ void step_1_main()
         try
         {
             grid_generator(tria_3d, grid_type_name);
+            tria_3d.refine_global(2);
             save(tria_3d, grid_type_name + "_3d");
         } catch(const MyException& caught){
             cout<<"Got :\" " << caught.what() << "\"" <<endl;
