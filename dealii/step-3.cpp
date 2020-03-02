@@ -11,7 +11,20 @@ void step_3_main()
             {
                 LaplaceEquationSolver<2, 2> a;
                 a.run(grid_type_name, (renumberings)renumbering_type, 
-                    "sol_ren_type_" + to_string(renumbering_type) + "_mesh_type_" + grid_type_name);
+                    "sol_ren_type_" + to_string(renumbering_type) + "_mesh_type_" + grid_type_name + "_2d");
+            }
+            catch(const MyException& caught)
+            {
+                cout<<"Got :\" " << caught.what() << "\"" <<endl;
+            }
+
+            try
+            {
+                if (grid_type_name.compare("concentric_hyper_shells") == 0)
+                    throw MyException("concentric_hyper_shells grid gives error in 3d");
+                LaplaceEquationSolver<3, 3> a;
+                a.run(grid_type_name, (renumberings)renumbering_type, 
+                    "sol_ren_type_" + to_string(renumbering_type) + "_mesh_type_" + grid_type_name + "_3d");
             }
             catch(const MyException& caught)
             {
