@@ -78,12 +78,24 @@ class LaplaceEquationSolver
         };
 
         void run(string grid_type_name, renumberings renumbering_type, string file_name = "solution")
-        {
+        {   
             make_grid(grid_type_name);
-            setup_system(renumbering_type, file_name);
-            assemble_system();
-            solve();
-            output_results(file_name);
+            //NOTE it crashes when i == 3.
+            for(unsigned i = 0; i < 4; ++i)
+            {
+                cout << "Cycle: " << i << endl;
+                
+                if (i != 0)
+                    triangulation.refine_global(1);
+
+                if (grid_type_name.compare("hyper_ball") == 0 && triangulation.n_levels() == 3)
+                    throw MyException("hyper_ball has some erro if refined three times");
+
+                setup_system(renumbering_type, file_name + "_refine_" + to_string(i));
+                assemble_system();
+                solve();
+                output_results(file_name + "_refine_" + to_string(i));
+            }
         }
 
         double value(Point<dim> p = Point<dim>())
@@ -101,7 +113,6 @@ class LaplaceEquationSolver
         void make_grid(string grid_type_name)
         {
             grid_generator(triangulation, grid_type_name);
-            triangulation.refine_global(2);
             cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
             cout << "Total number of cells: " << triangulation.n_cells() << endl;
         }
@@ -197,7 +208,7 @@ class LaplaceEquationSolver
 
             VectorTools::interpolate_boundary_values (dof_handler,
                 1,
-                Functions::CosineFunction< dim >(),
+                BoundaryValues< dim >(), //Functions::CosineFunction< dim >(),
                 boundary_values);
 
             MatrixTools::apply_boundary_values(
@@ -231,6 +242,19 @@ class LaplaceEquationSolver
 
             ofstream output(file_name + ".vtk");
             data_out.write_vtk(output);
+            output.close();
+
+            if(dim == 2)
+            {
+                output.open(file_name + ".eps");
+                DataOutBase::EpsFlags eps_flags;
+                eps_flags.z_scaling = 4.;
+                eps_flags.azimut_angle = 40.;
+                eps_flags.turn_angle   = 10.;
+                data_out.set_flags(eps_flags);
+                data_out.write_eps(output);
+                output.close();
+            }
         }
 
         Triangulation<dim, spacedim> triangulation;
