@@ -2,10 +2,10 @@
 
 void step_3_main()
 {
-    for(int renumbering_type = (int)none; renumbering_type <= (int)random_renumbering; ++renumbering_type)
+    for(int renumbering_type = (int)none; renumbering_type <= (int)none; ++renumbering_type)
         for(auto grid_type_name: grids_types_array())
         {
-            cout << "grid type: "<< grid_type_name << " renumbering type: " << (renumberings)renumbering_type << endl;
+            cout << endl << "grid type: "<< grid_type_name << " renumbering type: " << (renumberings)renumbering_type << endl << endl;
 
             try
             {
