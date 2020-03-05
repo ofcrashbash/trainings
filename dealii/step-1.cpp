@@ -14,7 +14,6 @@ void grid_generator(Triangulation<1, 1>& triangulation, string grid_type)
         {
             case 0:
                 GridGenerator::hyper_cube(triangulation);
-                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
         }
     else 
@@ -35,7 +34,6 @@ void grid_generator(Triangulation<1, 2>& triangulation, string grid_type)
         {
             case 3:
                 GridGenerator::hyper_cube(triangulation);
-                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -88,7 +86,6 @@ void grid_generator(Triangulation<2, 2>& triangulation, string grid_type)
                 break;
             case 3:
                 GridGenerator::hyper_cube(triangulation);
-                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -167,7 +164,6 @@ void grid_generator(Triangulation<2, 3>& triangulation, string grid_type)
         {
             case 3:
                 GridGenerator::hyper_cube(triangulation);
-                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
@@ -226,7 +222,6 @@ void grid_generator(Triangulation<3, 3>& triangulation, string grid_type)
                 break;
             case 3:
                 GridGenerator::hyper_cube(triangulation);
-                triangulation.begin_active()->face(0)->set_boundary_id(1);
                 break;
             case 4:
                 GridGenerator::subdivided_hyper_cube(triangulation, 3);
