@@ -23,6 +23,10 @@
 #include <deal.II/lac/solver_cg.h>
 #include <deal.II/lac/precondition.h>
 
+#include <deal.II/lac/affine_constraints.h>
+#include <deal.II/grid/grid_refinement.h>
+#include <deal.II/numerics/error_estimator.h>
+
 #include <vector>
 #include <map>
 
@@ -36,21 +40,17 @@ class RightHandSide: public Function<dim>
 
         virtual double value(const Point<dim> & p, const unsigned component = 0) const override
         {
-            double return_value = 0;
-            for(unsigned i = 0; i < dim; ++i)
-                return_value += 4*pow(p(i), 4);
-
-            return return_value;
+            return 1.;
         }
 };
 
 template <int dim>
 double coeff(const Point< dim > & p)
 {
-    if (p.distance(Point< dim >()) < 0.5)
-        return 10.;
+    if (p.square() < 0.5 * 0.5)
+        return 20.;
     else 
-        return 0.1;
+        return 1;
 }
 
 template <int dim>
@@ -71,7 +71,7 @@ class LaplaceEquationSolver
     public:
 
         LaplaceEquationSolver():
-            fe(1), 
+            fe(2), 
             dof_handler(triangulation)
         {
             deallog.depth_console(2);
@@ -79,22 +79,24 @@ class LaplaceEquationSolver
 
         void run(string grid_type_name, renumberings renumbering_type, string file_name = "solution")
         {   
-            make_grid(grid_type_name);
-            //NOTE it crashes when i == 3.
-            for(unsigned i = 0; i < 4; ++i)
+            
+            //NOTE it crashes when cycle == 3.
+            for(unsigned cycle = 0; cycle < 2; ++cycle)
             {
-                cout << "Cycle: " << i << endl;
+                cout << "Cycle: " << cycle << endl;
                 
-                if (i != 0)
-                    triangulation.refine_global(1);
+                if (cycle == 0)
+                    make_grid(grid_type_name);
+                else
+                    refine_grid();
 
-                if (grid_type_name.compare("hyper_ball") == 0 && triangulation.n_levels() == 3)
+                if (grid_type_name.compare("hyper_ball") == 0 && triangulation.n_levels() >= 3 && dim == 3)
                     throw MyException("hyper_ball has some erro if refined three times");
 
-                setup_system(renumbering_type, file_name + "_refine_" + to_string(i));
+                setup_system(renumbering_type, file_name + "_refine_" + to_string(cycle));
                 assemble_system();
                 solve();
-                output_results(file_name + "_refine_" + to_string(i));
+                output_results(file_name + "_refine_" + to_string(cycle));
             }
         }
 
@@ -113,6 +115,7 @@ class LaplaceEquationSolver
         void make_grid(string grid_type_name)
         {
             grid_generator(triangulation, grid_type_name);
+            triangulation.refine_global(2);
             cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
             cout << "Total number of cells: " << triangulation.n_cells() << endl;
         }
@@ -124,37 +127,78 @@ class LaplaceEquationSolver
             cout << "Number of degree of freedom: " << dof_handler.n_dofs() << endl;
 
             renumber<dim, spacedim>(dof_handler, renumbering_type);
+            
+            solution.reinit(dof_handler.n_dofs());
+            system_rhs.reinit(dof_handler.n_dofs());
 
-            DynamicSparsityPattern dynamic_sparsity_pattern(dof_handler.n_dofs(), dof_handler.n_dofs());
-            DoFTools::make_sparsity_pattern(dof_handler, dynamic_sparsity_pattern);
-            sparsity_pattern.copy_from(dynamic_sparsity_pattern);   
+            constraints.clear();
 
-            //save sparsity pattern to file
+            DoFTools::make_hanging_node_constraints(
+                dof_handler, 
+                constraints);
+
+            VectorTools::interpolate_boundary_values(
+                dof_handler, 
+                0, Functions::ZeroFunction< dim >(),
+                constraints);
+
+            constraints.close();
+
+            DynamicSparsityPattern dsp(dof_handler.n_dofs());
+            DoFTools::make_sparsity_pattern(
+                dof_handler, 
+                dsp, 
+                constraints, 
+                false);
+
+            sparsity_pattern.copy_from(dsp);
+            
+            //save sparsity pattern
             ofstream out("sparsity_pattern_" + file_name + ".svg");
             sparsity_pattern.print_svg(out);
             out.close();
 
             system_matrix.reinit(sparsity_pattern);
-            
-            solution.reinit(dof_handler.n_dofs());
-            system_rhs.reinit(dof_handler.n_dofs());
+        }
+
+        void refine_grid()
+        {
+            Vector< float > estimate_error_per_cell(triangulation.n_active_cells());
+
+            KellyErrorEstimator< dim >::estimate(
+                dof_handler,
+                QGauss< dim - 1 >(fe.degree + 1), 
+                map< types::boundary_id, const Function< dim > *>(),
+                solution, 
+                estimate_error_per_cell
+            );
+
+            GridRefinement::refine_and_coarsen_fixed_number(
+                triangulation, 
+                estimate_error_per_cell,
+                0.3, 
+                0.03
+            );
+
+            triangulation.execute_coarsening_and_refinement();
         }
 
         void assemble_system()
         {   
-            RightHandSide< dim > right_hand_side;
-
             QGauss< dim > quadrature_formula(fe.degree + 1);
+
             FEValues< dim, spacedim > fe_values(fe, quadrature_formula, 
                 update_values | update_gradients | update_JxW_values | update_quadrature_points);
 
             const unsigned dofs_per_cell = fe.dofs_per_cell;
             const unsigned n_q_points = quadrature_formula.size();
 
-            vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
+            FullMatrix< double > cell_matrix(dofs_per_cell, dofs_per_cell);
+            Vector< double > cell_rhs(dofs_per_cell);
+            
+            vector< types::global_dof_index > local_dof_indices(dofs_per_cell);
 
-            FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
-            Vector<double> cell_rhs(dofs_per_cell);
+            RightHandSide< dim > right_hand_side;
 
             for(const auto& cell: dof_handler.active_cell_iterators())
             {
@@ -170,13 +214,11 @@ class LaplaceEquationSolver
                     for(unsigned i = 0; i < dofs_per_cell; ++i)
                     {
                         for(unsigned j = 0; j < dofs_per_cell; ++j)
-                        {
                             cell_matrix(i, j) += 
-                                coeff(x_q) *
+                                coeff< dim >(x_q) *
                                 fe_values.shape_grad(i, q_index) *
                                 fe_values.shape_grad(j, q_index) *
                                 fe_values.JxW(q_index);
-                        }
 
                         cell_rhs(i) += fe_values.shape_value(i, q_index) *
                             right_hand_side.value(x_q) *
@@ -185,48 +227,31 @@ class LaplaceEquationSolver
                 }
 
                 cell->get_dof_indices(local_dof_indices);
-
-                for(unsigned i = 0; i < dofs_per_cell; ++i)
-                {
-                    for(unsigned j = 0; j < dofs_per_cell; ++j)
-                        system_matrix.add(
-                            local_dof_indices[i],
-                            local_dof_indices[j],
-                            cell_matrix(i, j));
-
-                    system_rhs(local_dof_indices[i]) += cell_rhs(i);
-                }
+                constraints.distribute_local_to_global(
+                    cell_matrix, 
+                    cell_rhs, 
+                    local_dof_indices, 
+                    system_matrix, 
+                    system_rhs);
             }
-
-            map< types::global_dof_index, double > boundary_values;
-
-            VectorTools::interpolate_boundary_values(
-                dof_handler, 
-                0, 
-                BoundaryValues< dim >(),
-                boundary_values);
-
-            VectorTools::interpolate_boundary_values (dof_handler,
-                1,
-                BoundaryValues< dim >(), //Functions::CosineFunction< dim >(),
-                boundary_values);
-
-            MatrixTools::apply_boundary_values(
-                boundary_values, 
-                system_matrix,
-                solution,
-                system_rhs);
         }
 
         void solve()
         {
-            SolverControl solver_control(1000, 1e-15);
+            SolverControl solver_control(1000, 1e-12);
             SolverCG< Vector < double > > solver(solver_control);
 
+            //TODO try different preconditions Jacobi, SparseILU
             PreconditionSSOR<> preconditioner;
             preconditioner.initialize(system_matrix, 1.2);
 
-            solver.solve(system_matrix, solution, system_rhs, preconditioner);
+            solver.solve(
+                system_matrix, 
+                solution, 
+                system_rhs, 
+                preconditioner);
+
+            constraints.distribute(solution);
 
             cout << "   " << solver_control.last_step()
                 << " CG iterations needed to obtain convergence." << endl;
@@ -242,27 +267,17 @@ class LaplaceEquationSolver
 
             ofstream output(file_name + ".vtk");
             data_out.write_vtk(output);
-            output.close();
-
-            if(dim == 2)
-            {
-                output.open(file_name + ".eps");
-                DataOutBase::EpsFlags eps_flags;
-                eps_flags.z_scaling = 4.;
-                eps_flags.azimut_angle = 40.;
-                eps_flags.turn_angle   = 10.;
-                data_out.set_flags(eps_flags);
-                data_out.write_eps(output);
-                output.close();
-            }
         }
 
         Triangulation<dim, spacedim> triangulation;
         FE_Q< dim, spacedim > fe;
         DoFHandler< dim, spacedim > dof_handler;
         
+        AffineConstraints< double > constraints;
+        
         SparsityPattern sparsity_pattern;
         SparseMatrix< double > system_matrix;
+
         Vector< double > solution;
         Vector< double > system_rhs;
 };
@@ -424,8 +439,11 @@ class TrivialFunctionSolver
         FE_Q< dim, spacedim > fe;
         DoFHandler< dim, spacedim > dof_handler;
         
+        AffineConstraints< double > constraints;
+        
         SparsityPattern sparsity_pattern;
         SparseMatrix< double > system_matrix;
+
         Vector< double > solution;
         Vector< double > system_rhs;
 };
