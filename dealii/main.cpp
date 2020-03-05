@@ -10,7 +10,7 @@ int main(void)
     {
         step_1_main();//WTF why when I comment out this, error with std11 occur
         //step_2_main();
-        step_3_main();
+        step_3::run();
     }
     catch(const exception &exc)
     {

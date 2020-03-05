@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    step_3_main();
+    step_3::run();
 
     return 0;
 }
