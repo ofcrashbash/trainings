@@ -23,10 +23,10 @@ extern TransfiniteInterpolationManifold<2, 2> g_inner_manifold;
 
 struct MyException : public std::exception
 {
-   string s;
-   MyException(string ss) : s(ss) {}
-   ~MyException() throw () {} // Updated
-   const char* what() const throw() { return s.c_str(); }
+    string s;
+    MyException(string ss) : s(ss) {}
+    ~MyException() throw () {} // Updated
+    const char* what() const throw() { return s.c_str(); }
 };
 
 void grid_generator(Triangulation<1>& triangulation, string grid_type);
