@@ -53,9 +53,9 @@ namespace step_3{
     double coeff(const Point< dim > & p)
     {
         if (p.square() < 0.5 * 0.5)
-            return 20.;
+            return 1.;
         else 
-            return 1;
+            return 1.;
     }
 
     template <int dim>
@@ -82,21 +82,21 @@ namespace step_3{
                 deallog.depth_console(2);
             };
 
-            void run(string grid_type_name, renumberings renumbering_type, string file_name = "solution")
+            void run(renumberings renumbering_type, string file_name = "solution")
             {   
 
                 //NOTE it crashes when cycle == 3.
-                for(unsigned cycle = 0; cycle < 2; ++cycle)
+                for(unsigned cycle = 0; cycle < 8; ++cycle)
                 {
                     cout << "Cycle: " << cycle << endl;
 
                     if (cycle == 0)
-                        make_grid(grid_type_name);
+                        make_grid();
                     else
                         refine_grid();
 
-                    if (grid_type_name.compare("hyper_ball") == 0 && triangulation.n_levels() >= 3 && dim == 3)
-                        throw MyException("hyper_ball has some erro if refined three times");
+                    //if (grid_type_name.compare("hyper_ball") == 0 && triangulation.n_levels() >= 3 && dim == 3)
+                    //    throw MyException("hyper_ball has some erro if refined three times");
 
                     setup_system(renumbering_type, file_name + "_refine_" + to_string(cycle));
                     assemble_system();
@@ -117,12 +117,25 @@ namespace step_3{
 
         private:
 
-            void make_grid(string grid_type_name)
+            void make_grid()
             {
-                grid_generator(triangulation, grid_type_name);
+                GridGenerator::hyper_cube(triangulation);
+                triangulation.begin_active()->face(0)->set_boundary_id(1);
+                triangulation.begin_active()->face(1)->set_boundary_id(2);
+                triangulation.begin_active()->face(2)->set_boundary_id(3);
+                triangulation.begin_active()->face(3)->set_boundary_id(4);
                 triangulation.refine_global(2);
                 cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
                 cout << "Total number of cells: " << triangulation.n_cells() << endl;
+
+                ofstream out("hyper_cube.msh");
+                GridOutFlags::Msh msh;
+                msh.write_faces = true;
+                msh.write_lines = true;
+                GridOut grid_out;
+                grid_out.set_flags(msh);
+                grid_out.write_msh(triangulation, out);
+                out.close();
             }
 
             void setup_system(renumberings renumbering_type = none, string file_name = "solution")
@@ -144,7 +157,12 @@ namespace step_3{
 
                 VectorTools::interpolate_boundary_values(
                     dof_handler, 
-                    0, Functions::ZeroFunction< dim >(),
+                    1, Functions::ZeroFunction< dim >(),
+                    constraints);
+                
+                VectorTools::interpolate_boundary_values(
+                    dof_handler, 
+                    2, Functions::ConstantFunction< dim >(1),
                     constraints);
 
                 constraints.close();
@@ -157,13 +175,14 @@ namespace step_3{
                     false);
 
                 sparsity_pattern.copy_from(dsp);
+                
+                system_matrix.reinit(sparsity_pattern);
 
                 //save sparsity pattern
                 ofstream out("sparsity_pattern_" + file_name + ".svg");
                 sparsity_pattern.print_svg(out);
                 out.close();
 
-                system_matrix.reinit(sparsity_pattern);
             }
 
             void refine_grid()
@@ -191,12 +210,18 @@ namespace step_3{
             void assemble_system()
             {   
                 QGauss< dim > quadrature_formula(fe.degree + 1);
+                QGauss< dim - 1> face_quadrature_formula(fe.degree + 1);
 
                 FEValues< dim, spacedim > fe_values(fe, quadrature_formula, 
                     update_values | update_gradients | update_JxW_values | update_quadrature_points);
 
+                FEFaceValues<dim> fe_face_values(fe,
+                    face_quadrature_formula,
+                    update_values | update_quadrature_points | update_normal_vectors | update_JxW_values);
+
                 const unsigned dofs_per_cell = fe.dofs_per_cell;
                 const unsigned n_q_points = quadrature_formula.size();
+                const unsigned n_face_q_points = face_quadrature_formula.size();
 
                 FullMatrix< double > cell_matrix(dofs_per_cell, dofs_per_cell);
                 Vector< double > cell_rhs(dofs_per_cell);
@@ -228,6 +253,25 @@ namespace step_3{
                             cell_rhs(i) += fe_values.shape_value(i, q_index) *
                                 right_hand_side.value(x_q) *
                                 fe_values.JxW(q_index);
+                        }
+                    }
+
+                    for(unsigned face_number = 0; face_number < GeometryInfo<dim>::faces_per_cell; ++face_number)
+                    {
+                        if(cell->face(face_number)->at_boundary() && (cell->face(face_number)->boundary_id() == 3 || cell->face(face_number)->boundary_id() == 4))
+                        {
+                            fe_face_values.reinit(cell, face_number);
+
+                            for(unsigned q_point = 0; q_point < n_face_q_points; ++q_point)
+                            {
+                                const double neuman_value = -2;
+                                for(unsigned i = 0; i < dofs_per_cell; ++i)
+                                    cell_rhs(i) += 
+                                        neuman_value * 
+                                        fe_face_values.shape_value(i, q_point)*
+                                        fe_face_values.JxW(q_point);
+
+                            }
                         }
                     }
 
@@ -275,172 +319,6 @@ namespace step_3{
             }
 
             Triangulation<dim, spacedim> triangulation;
-            FE_Q< dim, spacedim > fe;
-            DoFHandler< dim, spacedim > dof_handler;
-
-            AffineConstraints< double > constraints;
-
-            SparsityPattern sparsity_pattern;
-            SparseMatrix< double > system_matrix;
-
-            Vector< double > solution;
-            Vector< double > system_rhs;
-    };
-
-
-    template <int dim = 2, int spacedim = dim>
-    class TrivialFunctionSolver
-    {
-        public:
-
-            TrivialFunctionSolver():
-                fe(1), 
-                dof_handler(triangulation)
-            {
-                deallog.depth_console(2);
-            };
-
-            void run(string grid_type_name = "hyper_cube", renumberings renumbering_type = none, int function_num = 0,  string file_name = "solution")
-            {
-                make_grid(grid_type_name);
-                setup_system(renumbering_type, file_name);
-
-                dealii::Function< dim > * func = NULL;
-                switch(function_num)
-                {
-                    case 0:
-                        func = new Functions::ZeroFunction< dim >();
-                        break;
-                    case 1:
-                        func = new Functions::ConstantFunction< dim >(10);
-                        break;
-                    case 2:
-                        func = new Functions::Bessel1< dim >(1, 1);
-                        break;
-                    case 3:
-                        func = new Functions::SquareFunction< dim >();
-                        break;
-                    case 4:
-                        func = new Functions::CosineFunction< dim >();
-                        break;
-                    case 5:
-                        func = new Functions::ExpFunction< dim >();
-                        break;
-                    default: 
-                        throw MyException("unknown function type: " + function_num);
-                }
-
-                assemble_system(func);
-                solve();
-                output_results(file_name);
-            }
-
-        private:
-
-            void make_grid(string grid_type_name)
-            {
-                grid_generator(triangulation, grid_type_name);
-                triangulation.refine_global(5);
-                cout << "Number of active cells: " << triangulation.n_active_cells() << endl;
-            }
-
-            void setup_system(renumberings renumbering_type = none, string file_name = "solution")
-            {
-                //degree of freeedom
-                dof_handler.distribute_dofs(fe);
-                cout << "Number of degree of freedom: " << dof_handler.n_dofs() << endl;
-
-                renumber< dim, spacedim >(dof_handler, renumbering_type);
-
-                DynamicSparsityPattern dynamic_sparsity_pattern(dof_handler.n_dofs(), dof_handler.n_dofs());
-                DoFTools::make_sparsity_pattern(dof_handler, dynamic_sparsity_pattern);
-                sparsity_pattern.copy_from(dynamic_sparsity_pattern);   
-
-                //save sparsity pattern to file
-                ofstream out("sparsity_pattern_" + file_name + ".svg");
-                sparsity_pattern.print_svg(out);
-                out.close();
-
-                system_matrix.reinit(sparsity_pattern);
-
-                solution.reinit(dof_handler.n_dofs());
-                system_rhs.reinit(dof_handler.n_dofs());
-            }
-
-            void assemble_system(dealii::Function< dim > *function)
-            {   
-                QGauss< dim > quadrature_formula(fe.degree + 1);
-                FEValues< dim, spacedim > fe_values(fe, quadrature_formula, 
-                    update_values | update_gradients | update_JxW_values | update_quadrature_points);
-
-                const unsigned dofs_per_cell = fe.dofs_per_cell;
-                const unsigned n_q_points = quadrature_formula.size();
-
-                vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
-
-                FullMatrix< double > cell_matrix(dofs_per_cell, dofs_per_cell);
-                Vector< double > cell_rhs(dofs_per_cell);
-
-                for(const auto& cell: dof_handler.active_cell_iterators())
-                {
-                    fe_values.reinit(cell);
-                    cell_matrix = 0;
-                    cell_rhs = 0;
-
-                    for(unsigned q_index = 0; q_index < n_q_points; ++q_index)
-                    {
-                        for(unsigned i = 0; i < dofs_per_cell; ++i)
-                        {
-                            for(unsigned j = 0; j < dofs_per_cell; ++j)
-                            {
-                                cell_matrix(i, j) += 
-                                    fe_values.shape_value(i, q_index) *
-                                    fe_values.shape_value(j, q_index) *
-                                    fe_values.JxW(q_index);
-                            }
-
-                            cell_rhs(i) += fe_values.shape_value(i, q_index) *
-                                function->value(fe_values.quadrature_point(i)) *
-                                fe_values.JxW(q_index);
-                        }
-                    }
-
-                    cell->get_dof_indices(local_dof_indices);
-
-                    for(unsigned i = 0; i < dofs_per_cell; ++i)
-                    {
-                        for(unsigned j = 0; j < dofs_per_cell; ++j)
-                            system_matrix.add(
-                                local_dof_indices[i],
-                                local_dof_indices[j],
-                                cell_matrix(i, j));
-
-                        system_rhs(local_dof_indices[i]) += cell_rhs(i);
-                    }
-                }
-            }
-
-            void solve()
-            {
-                SolverControl solver_control(1000, 1e-30);
-                SolverCG< Vector< double > > solver(solver_control);
-
-                solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
-            }
-
-            void output_results(string file_name = "solution") const
-            {
-                DataOut< dim > data_out;
-
-                data_out.attach_dof_handler(dof_handler);
-                data_out.add_data_vector(solution, file_name);
-                data_out.build_patches();
-
-                ofstream output(file_name + ".vtk");
-                data_out.write_vtk(output);
-            }
-
-            Triangulation< dim, spacedim > triangulation;
             FE_Q< dim, spacedim > fe;
             DoFHandler< dim, spacedim > dof_handler;
 
