@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the composite-model -->
+<Model Name="CompositeModel1">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel StartCommand="StartTLMOpenModelica" Position="0,0,0" ModelFile="Basic.mo" Angle321="0,0,0" Name="resistor">
+      <Annotation Origin="{28,28}" Rotation="0" Visible="true" Extent="{-10,-10,10,10}"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMOpenModelica" Position="0,0,0" ModelFile="Basic.mo" Angle321="0,0,0" Name="resistor1">
+      <Annotation Origin="{-52,16}" Rotation="0" Visible="true" Extent="{-10,-10,10,10}"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections/>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="1"/>
+</Model>
