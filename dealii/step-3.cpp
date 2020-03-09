@@ -6,8 +6,6 @@ namespace step_3{
     {
         //for(auto grid_type_name: grids_types_array())
         //{
-            
-
             //cout << endl << "grid type: "<< grid_type_name << endl << endl;
 
             try
