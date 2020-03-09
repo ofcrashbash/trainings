@@ -266,3 +266,6 @@ paket-files/
 __pycache__/
 *.pyc
 */.vscode/*
+cs50/mario
+cs50/credit
+cs50/cash
