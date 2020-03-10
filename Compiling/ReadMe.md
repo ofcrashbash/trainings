@@ -4,5 +4,5 @@
 
 ## Посилання
 
-- https://www.rapidtables.com/code/linux/cp.html
+- https://www.rapidtables.com/code/linux/gcc.html
 
