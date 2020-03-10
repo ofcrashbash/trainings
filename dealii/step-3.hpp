@@ -101,8 +101,9 @@ namespace step_3{
                     setup_system(renumbering_type, file_name + "_refine_" + to_string(cycle));
                     assemble_system();
                     solve();
-                    output_results(file_name + "_refine_" + to_string(cycle));
+                    process_solution(cycle);
                 }
+                output_results(file_name);
             }
 
             double value(Point<dim> p = Point<dim>())
@@ -113,6 +114,55 @@ namespace step_3{
             double mean()
             {
                 return VectorTools::compute_mean_value (dof_handler, QGauss<dim>(fe.degree + 1), solution, 0);
+            }
+
+            double process_solution(const unsigned cycle)
+            {
+                Vector< double > difference_per_cell(triangulation.n_active_cells());
+                VectorTools::integrate_difference(
+                    dof_handler, 
+                    solution,
+                    ZeroFunction< dim >(),
+                    difference_per_cell,
+                    QGauss< dim >(fe.degree + 1),
+                    VectorTools::L2_norm);
+
+                const double L2_error = VectorTools::compute_global_error(triangulation, difference_per_cell, VectorTools::L2_norm);
+
+                VectorTools::integrate_difference(
+                    dof_handler, 
+                    solution,
+                    ZeroFunction< dim >(),
+                    difference_per_cell,
+                    QGauss< dim >(fe.degree + 1),
+                    VectorTools::H1_seminorm);
+
+                const double H1_error = VectorTools::compute_global_error(triangulation, difference_per_cell, VectorTools::H1_seminorm);
+
+
+                const QTrapez<1> q_trapez;
+                const QIterated< dim > q_iterated(q_trapez, 2*fe.degree + 1);
+                VectorTools::integrate_difference(
+                    dof_handler,
+                    solution, 
+                    ZeroFunction< dim >(), 
+                    difference_per_cell, 
+                    q_iterated,
+                    VectorTools::Linfty_norm);
+
+                const double Linfty_norm = VectorTools::compute_global_error(triangulation, difference_per_cell, VectorTools::Linfty_norm);
+
+                const unsigned n_active_cells = triangulation.n_active_cells();
+                const unsigned n_dofs         = dof_handler.n_dofs();
+                
+                convergence_table.add_value("cycle", cycle);
+                convergence_table.add_value("cells", n_active_cells);
+                convergence_table.add_value("dofs", n_dofs);
+                convergence_table.add_value("L2", L2_error);
+                convergence_table.add_value("H1", H1_error);
+                convergence_table.add_value("Linfty", Linfty_norm);
+
+                return L2_error + Linfty_norm;
             }
 
         private:
@@ -306,7 +356,7 @@ namespace step_3{
                     << " CG iterations needed to obtain convergence." << endl;
             }
 
-            void output_results(string file_name = "solution") const
+            void output_results(string file_name = "solution")
             {
                 DataOut< dim > data_out;
 
@@ -316,6 +366,28 @@ namespace step_3{
 
                 ofstream output(file_name + ".vtk");
                 data_out.write_vtk(output);
+
+
+                //convergence table
+                convergence_table.set_precision("L2", 3);
+                convergence_table.set_precision("H1", 3);
+                convergence_table.set_precision("Linfty", 3);
+                convergence_table.set_scientific("L2", true);
+                convergence_table.set_scientific("H1", true);
+                convergence_table.set_scientific("Linfty", true);
+                convergence_table.set_tex_caption("cells", "\\# cells");
+                convergence_table.set_tex_caption("dofs", "\\# dofs");
+                convergence_table.set_tex_caption("L2", "@f$L^2@f$-error");
+                convergence_table.set_tex_caption("H1", "@f$H^1@f$-error");
+                convergence_table.set_tex_caption("Linfty", "@f$L^\\infty@f$-error");
+                convergence_table.set_tex_format("cells", "r");
+                convergence_table.set_tex_format("dofs", "r");
+                std::cout << std::endl;
+                convergence_table.write_text(std::cout);
+
+                string error_filename = "error.tex";
+                std::ofstream error_table_file(error_filename);
+                convergence_table.write_tex(error_table_file);
             }
 
             Triangulation<dim, spacedim> triangulation;
@@ -329,6 +401,8 @@ namespace step_3{
 
             Vector< double > solution;
             Vector< double > system_rhs;
+
+            ConvergenceTable convergence_table;
     };
 
     void run();
