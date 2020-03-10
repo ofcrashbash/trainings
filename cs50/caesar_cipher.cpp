@@ -1,21 +1,12 @@
+//use compiler
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <cs50.h>
 
 char cipher(const char c, const int key);
 
-bool check_key(const char *key)
-{
-    int i = 0;
-    while(key[i] != (char)NULL)
-    {
-        printf("check - %c\n", key[i]);
-        if(((int)key[i] < 48 || (int)key[i] > 57) && !(i == 0 && ((int)key[i] == 43 || (int)key[i] == 45)))
-            return false;
-        ++i;
-    }
-    
-    return true;
-}
+bool check_key(const char *key);
 
 int main(const int argc, const char **argv)
 {   
@@ -26,8 +17,9 @@ int main(const int argc, const char **argv)
             int key = atoi(argv[1]);
 
             int i = 0;
-            char test[] = "lalalalal something";
+            string test = get_string("plaintext: ");
             char cur_char = test[i];
+            printf("ciphertext: ");
             while(cur_char != (char)NULL)
             {
                 printf("%c", cipher(cur_char, key));
@@ -65,4 +57,17 @@ char cipher(const char c, int key)
         c_cipher = c;
 
     return c_cipher;
+}
+
+bool check_key(const char *key)
+{
+    int i = 0;
+    while(key[i] != (char)NULL)
+    {
+        if(((int)key[i] < 48 || (int)key[i] > 57) && !(i == 0 && ((int)key[i] == 43 || (int)key[i] == 45)))
+            return false;
+        ++i;
+    }
+    
+    return true;
 }
