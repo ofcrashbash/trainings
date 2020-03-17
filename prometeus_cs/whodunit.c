@@ -73,7 +73,9 @@ int main(int argc, char *argv[])
 
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
-
+            triple.rgbtGreen = triple.rgbtBlue = 0.0;
+            if(triple.rgbtRed < 0xFD)
+                triple.rgbtRed = 0;
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
         }
