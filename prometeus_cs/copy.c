@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     // ensure proper usage
     if (argc != 3)
     {
-        printf("Usage: %s infile outfile\n", argv[0]);
+        fprintf(stderr, "Usage: %s infile outfile\n", argv[0]);
         return 1;
     }
 
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
     {
-        printf("Could not open %s.\n", infile);
+        fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
     }
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     if (outptr == NULL)
     {
         fclose(inptr);
-        printf("Could not create %s.\n", outfile);
+        fprintf(stderr, "Could not create %s.\n", outfile);
         return 3;
     }
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     {
         fclose(outptr);
         fclose(inptr);
-        printf("Unsupported file format.\n");
+        fprintf(stderr, "Unsupported file format.\n");
         return 4;
     }
 

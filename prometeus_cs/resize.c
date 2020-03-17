@@ -8,9 +8,9 @@
 int main(int argc, char *argv[])
 {
     // ensure proper usage
-    if (argc != 3)
+    if (argc != 4)
     {
-        printf("Usage: copy infile outfile\n");
+        fprintf(stderr, "Usage: %s infile outfile resize_factor\n", argv[0]);
         return 1;
     }
 
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
     {
-        printf("Could not open %s.\n", infile);
+        fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
     }
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     if (outptr == NULL)
     {
         fclose(inptr);
-        printf("Could not create %s.\n", outfile);
+        fprintf(stderr, "Could not create %s.\n", outfile);
         return 3;
     }
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     {
         fclose(outptr);
         fclose(inptr);
-        printf("Unsupported file format.\n");
+        fprintf(stderr, "Unsupported file format.\n");
         return 4;
     }
 
@@ -73,9 +73,7 @@ int main(int argc, char *argv[])
 
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
-            triple.rgbtGreen = triple.rgbtBlue = 0.0;
-            if(triple.rgbtRed < 0xFD)
-                triple.rgbtRed = 0;
+
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
         }
