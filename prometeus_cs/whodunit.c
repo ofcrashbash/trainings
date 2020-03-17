@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     // ensure proper usage
     if (argc != 3)
     {
-        printf("Usage: %s infile outfile\n", argv[0]);
+        printf("Usage: copy infile outfile\n");
         return 1;
     }
 
