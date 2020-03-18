@@ -1,32 +1,8 @@
-// REcovers a JPEG dump memory
+// Recovers a JPEG dump memory
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "bmp.h"
-
-//jpeg
-
-typedef struct
-{
-    BYTE first;
-    BYTE second;
-    BYTE third;
-    BYTE forth;
-} __attribute__((__packed__))
-JPEGHEADERKEY;
-
-int is_jpeg_header(JPEGHEADERKEY *header)
-{
-    if( header->first == 0xff && 
-        header->second == 0xd8 && 
-        header->third == 0xff && 
-        (header->forth & 0xf0) == 0xe0)
-
-        return 1;
-
-    return 0;
-}
-
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +15,6 @@ int main(int argc, char *argv[])
 
     // remember filenames
     char *infile = argv[1];
-    char *outfile = "image";
 
     // open input file
     FILE *inptr = fopen(infile, "r");
@@ -49,25 +24,42 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    FILE *out_f_prt = NULL;
+    const unsigned BLOCK_SIZE = 512;
+    BYTE dataframe[BLOCK_SIZE];
+    char filename[15] = "";
+
     unsigned jpeg_counter = 0;
-    int ch = getc(inptr); 
-    while (ch != EOF)  
+    while (1)  
     { 
         /* display contents of file on screen */ 
-        JPEGHEADERKEY data;
-        fread(&data, sizeof(JPEGHEADERKEY), 1, inptr);
-        if(is_jpeg_header(&data))
+        size_t bytesRead = fread(&dataframe, sizeof(BYTE), BLOCK_SIZE, inptr);
+        
+        if (bytesRead == 0 && feof(inptr))
+            break;
+
+        int containsJpegHeader = (dataframe[0] == 0xff && dataframe[1] == 0xd8 && dataframe[2] == 0xff && (dataframe[3] & 0xf0) == 0xe0);
+
+        if(containsJpegHeader)
         {
+            if (out_f_prt != NULL)
+                fclose(out_f_prt);
+
+            sprintf(filename, "%03i.jpg", jpeg_counter);
+            out_f_prt = fopen(filename, "w");
+            if (out_f_prt == NULL)
+            {
+                fclose(inptr);
+                fprintf(stderr, "Could not open %s.\n", infile);
+                return 2;
+            } 
             printf("Got: %u!\n", jpeg_counter);
             jpeg_counter++;
         }
-        
 
-        ch = getc(inptr); 
-    } 
-
-    // skip over padding, if any
-    fseek(inptr, sizeof(JPEGHEADERKEY), SEEK_CUR);
+        if(out_f_prt != NULL)
+            fwrite(&dataframe, sizeof(BYTE), BLOCK_SIZE, out_f_prt);
+    }
 
     // close infile
     fclose(inptr);
