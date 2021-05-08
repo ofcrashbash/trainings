@@ -1,3 +1,4 @@
 {
-    "python.linting.pylintEnabled": false
+    "python.linting.pylintEnabled": false,
+    "python.pythonPath": "C:\\Users\\ofcra\\AppData\\Local\\Microsoft\\WindowsApps\\python3.9.exe"
 }
